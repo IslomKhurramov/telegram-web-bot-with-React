@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import "../src/components/card/card.css";
 import { getData } from "./components/constants/db";
 import Card from "./components/card/card";
 import Cart from "./components/cart/cart";
@@ -63,8 +64,8 @@ function App() {
       <h1 className="title_chaykhana">Samarkand Chaykhana</h1>
       <Cart cartItems={cartItems} onCheckout={onCheckout} />
       <div>
-        <Card onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
-        {/* <SecondMeal onAddItem={onAddItem} onRemoveItem={onRemoveItem} /> */}
+        {/* <Card onAddItem={onAddItem} onRemoveItem={onRemoveItem} /> */}
+        <SecondMeal onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
       </div>
     </div>
   );
