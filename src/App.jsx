@@ -3,6 +3,7 @@ import "./App.css";
 import { getData } from "./components/constants/db";
 import Card from "./components/card/card";
 import Cart from "./components/cart/cart";
+import SecondMeal from "./components/card/secondMeal";
 
 const foods = getData();
 
@@ -10,6 +11,11 @@ const teleg = window.Telegram.WebApp;
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
+  const [value, setValue] = React.useState("1");
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   useEffect(() => {
     teleg.ready();
   });
@@ -56,15 +62,9 @@ function App() {
     <div className="App">
       <h1 className="title_chaykhana">Samarkand Chaykhana</h1>
       <Cart cartItems={cartItems} onCheckout={onCheckout} />
-      <div className="cards_container">
-        {foods.map((food) => (
-          <Card
-            key={food.id}
-            food={food}
-            onAddItem={onAddItem}
-            onRemoveItem={onRemoveItem}
-          />
-        ))}
+      <div>
+        <Card onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
+        {/* <SecondMeal onAddItem={onAddItem} onRemoveItem={onRemoveItem} /> */}
       </div>
     </div>
   );

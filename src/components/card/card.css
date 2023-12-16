@@ -11,8 +11,8 @@
 }
 .card_badge {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10x;
+  right: 10px;
   width: 30px;
   height: 30px;
   background-color: rgba(227, 112, 30);

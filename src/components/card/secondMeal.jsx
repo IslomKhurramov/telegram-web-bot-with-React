@@ -1,23 +1,23 @@
 import { useState } from "react";
 import Button from "../button/button";
-import { getData } from "../../components/constants/db";
+import "../../App.css";
 
-import "../card/card.css";
+import { SecondMealData } from "../constants/secondmeal";
 
-const foods = getData();
+const secondMeal = SecondMealData();
 
-const Card = (props) => {
+const SecondMeal = (props) => {
   const [count, setCount] = useState(0);
   const { onAddItem, onRemoveItem } = props;
 
   const handleIncrement = () => {
     setCount((prev) => prev + 1);
-    onAddItem(foods);
+    onAddItem(secondMeal);
   };
 
   const handleDecrement = () => {
     setCount((prev) => prev - 1);
-    onRemoveItem(foods);
+    onRemoveItem(secondMeal);
   };
 
   return (
@@ -27,7 +27,7 @@ const Card = (props) => {
       </span>
 
       <div className="cards_container">
-        {foods.map((food) => (
+        {secondMeal.map((food) => (
           <div className="card_container" key={food.id}>
             <div className="img_container">
               <img src={food.Image} alt={food.title} width={"100%"} />
@@ -53,4 +53,4 @@ const Card = (props) => {
   );
 };
 
-export default Card;
+export default SecondMeal;
