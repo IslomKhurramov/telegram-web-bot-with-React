@@ -1,0 +1,19 @@
+.cart_btn.disabled {
+  opacity: 0.5;
+}
+.btn.cart_btn {
+  width: 90px;
+  height: 30px;
+  color: rgb(0, 0, 0);
+  background-color: rgba(255, 255, 255, 0.781);
+  border-style: none;
+  border-radius: 10px;
+  margin-left: 15px;
+  font-weight: bold;
+}
+.btn {
+  height: 30px;
+  width: 50px;
+  font-size: 12px;
+  font-weight: bold;
+}

@@ -1,0 +1,69 @@
+.card_container {
+  width: 40%;
+  background-color: #2d3748;
+  padding: 10px;
+  border-radius: 8px;
+  position: relative;
+  border: solid 1px rgba(228, 228, 228, 0.781);
+}
+.card_badge_hidden {
+  display: none;
+}
+.card_badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(227, 112, 30);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(20px, -20px) scale(1);
+  transition: all 0.3 ease;
+  opacity: 0.8;
+  font-weight: bold;
+}
+@keyframes scaleanimation {
+  to {
+    transform: translate(20px, -20px) scale(1);
+    opacity: 1;
+  }
+}
+.food_title {
+  font-family: cursive;
+  font-weight: 300;
+}
+.food_price {
+  font-size: 18px;
+  font-weight: bold;
+}
+.card_body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.btn_container {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}
+.btn {
+  height: 30px;
+  width: 50px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.hr {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(128, 128, 128, 0.656);
+  margin-bottom: 10px;
+}
+.cart_btn.disabled {
+  opacity: 0.5;
+}
