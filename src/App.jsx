@@ -75,59 +75,64 @@ function App() {
         <Box sx={{ width: "100%", typography: "body1" }}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <div className="scrollable-tabs">
+              <div className="scrollable-tabs" sx={{ overflowX: "auto" }}>
                 <TabList
                   onChange={handleChange}
                   aria-label="lab API tabs example"
                   className="tablist"
                   sx={{
                     display: "flex",
-                    maxWidth: "800px",
-                    overflowX: "scroll",
-                    whiteSpace: "nowrap",
+                    overflowX: "auto",
                     backgroundColor: "rgba(228, 228, 228, 0.781)",
-                    borderColor: "white", // Border color
-                    borderWidth: "1px", // Border width
-                    borderStyle: "solid", // Border style
-                    fontWeight: "bold",
+                    borderBottom: "1px solid white",
+                    whiteSpace: "nowrap",
+                    "& > *": {
+                      flex: "0 0 auto",
+                      minWidth: "160%", // Set a minimum width for each tab
+                      padding: "2px", // Add padding to the tabs for better spacing
+                    },
+                    "@media screen and (min-width:200%)": {
+                      // Adjust styles for smaller screens
+                      flexDirection: "row", // Allow tabs to be in a single row
+                    },
                   }}>
                   <Tab
                     sx={{
                       color: "white",
-                      fontSize: "10px",
+                      fontSize: "12px",
                       fontWeight: "700",
                     }}
                     label="OUR SOUPS"
                     value="1"
                   />
                   <Tab
-                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
+                    sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
                     label="SECOND MEAL"
                     value="2"
                   />
                   <Tab
-                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
+                    sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
                     label="SHASHLIK"
                     value="3"
                   />
                   <Tab
-                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
+                    sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
                     label="SALADS"
                     value="4"
                   />
                   <Tab
-                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
+                    sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
                     label="BREAD"
                     value="5"
                   />
                   <Tab
-                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
-                    label="garnish"
+                    sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
+                    label="GARNISH"
                     value="6"
                   />
                   <Tab
-                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
-                    label="BREAD"
+                    sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
+                    label="DRINKS"
                     value="7"
                   />
                 </TabList>
@@ -144,6 +149,15 @@ function App() {
               <ShashlikPage onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
             </TabPanel>
             <TabPanel value="4">
+              <Salads onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
+            </TabPanel>
+            <TabPanel value="5">
+              <Salads onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
+            </TabPanel>
+            <TabPanel value="6">
+              <Salads onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
+            </TabPanel>
+            <TabPanel value="7">
               <Salads onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
             </TabPanel>
           </TabContext>
