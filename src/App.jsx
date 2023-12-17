@@ -7,7 +7,7 @@ import Cart from "./components/cart/cart";
 import SecondMeal from "./components/card/secondMeal";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
-import { TabContext } from "@mui/lab";
+import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Shashlik from "./components/shashlik/shashlik";
