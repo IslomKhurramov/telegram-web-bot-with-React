@@ -75,51 +75,63 @@ function App() {
         <Box sx={{ width: "100%", typography: "body1" }}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                onChange={handleChange}
-                aria-label="lab API tabs example"
-                sx={{
-                  display: "flex", // Use flex display
-                  maxWidth: "100%", // Set a maximum width for the TabList
-                  overflowX: "auto", // Enable horizontal scrolling
-                  whiteSpace: "nowrap",
-                }}>
-                <Tab
-                  sx={{ color: "white", fontSize: "10px" }}
-                  label="OUR SOUPS"
-                  value="1"
-                />
-                <Tab
-                  sx={{ color: "white", fontSize: "10px" }}
-                  label="SECOND MEAL"
-                  value="2"
-                />
-                <Tab
-                  sx={{ color: "white", fontSize: "10px" }}
-                  label="SHASHLIK"
-                  value="3"
-                />
-                <Tab
-                  sx={{ color: "white", fontSize: "10px" }}
-                  label="SALADS"
-                  value="4"
-                />
-                <Tab
-                  sx={{ color: "white", fontSize: "10px" }}
-                  label="BREAD"
-                  value="5"
-                />
-                <Tab
-                  sx={{ color: "white", fontSize: "10px" }}
-                  label="BREAD"
-                  value="5"
-                />
-                <Tab
-                  sx={{ color: "white", fontSize: "10px" }}
-                  label="BREAD"
-                  value="5"
-                />
-              </TabList>
+              <div className="scrollable-tabs">
+                <TabList
+                  onChange={handleChange}
+                  aria-label="lab API tabs example"
+                  className="tablist"
+                  sx={{
+                    display: "flex",
+                    maxWidth: "800px",
+                    overflowX: "scroll",
+                    whiteSpace: "nowrap",
+                    backgroundColor: "rgba(228, 228, 228, 0.781)",
+                    borderColor: "white", // Border color
+                    borderWidth: "1px", // Border width
+                    borderStyle: "solid", // Border style
+                    fontWeight: "bold",
+                  }}>
+                  <Tab
+                    sx={{
+                      color: "white",
+                      fontSize: "10px",
+                      fontWeight: "700",
+                    }}
+                    label="OUR SOUPS"
+                    value="1"
+                  />
+                  <Tab
+                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
+                    label="SECOND MEAL"
+                    value="2"
+                  />
+                  <Tab
+                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
+                    label="SHASHLIK"
+                    value="3"
+                  />
+                  <Tab
+                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
+                    label="SALADS"
+                    value="4"
+                  />
+                  <Tab
+                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
+                    label="BREAD"
+                    value="5"
+                  />
+                  <Tab
+                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
+                    label="garnish"
+                    value="6"
+                  />
+                  <Tab
+                    sx={{ color: "white", fontSize: "10px", fontWeight: "700" }}
+                    label="BREAD"
+                    value="7"
+                  />
+                </TabList>
+              </div>
             </Box>
             <TabPanel value="1">
               {" "}
