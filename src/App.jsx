@@ -18,6 +18,7 @@ import Bread from "./components/bread/bread";
 import Deserts from "./components/desert/deserts";
 import Drinks from "./components/drinks/drinks";
 import Garnish from "./components/garnish/garnish";
+import totalPrice from "./components/units/total_price";
 
 const foods = getData();
 
@@ -72,6 +73,28 @@ function App() {
     teleg.MainButton.text = "Payment";
     teleg.MainButton.show();
   };
+
+  useEffect(() => {
+    const handleMainButtonClicked = () => {
+      return (
+        <div>
+          <h2>Payment Information</h2>
+          <form>
+            {/* Add form fields for payment information, address, name, and phone number */}
+            {/* Example: */}
+            <label>Name:</label>
+            <input type="text" name="name" required />
+            {/* Add more form fields as needed */}
+            <button type="submit">Submit Payment</button>
+          </form>
+        </div>
+      );
+    };
+
+    teleg.onEvent("mainButtonClicked", handleMainButtonClicked);
+    return () => teleg.offEvent("mainButtonClicked", handleMainButtonClicked);
+  }, []);
+
   return (
     <div className="App">
       <h1 className="title_chaykhana">Samarkand Chaykhana</h1>
