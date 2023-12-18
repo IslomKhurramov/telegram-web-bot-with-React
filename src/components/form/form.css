@@ -1,0 +1,21 @@
+.form-container {
+  background-color: #2d3748;
+  min-height: 100vh;
+  text-align: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  width: 100%;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+.form input {
+  height: 30px;
+}
+.submit_btn {
+  color: aliceblue;
+}
