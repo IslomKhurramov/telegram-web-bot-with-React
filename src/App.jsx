@@ -13,6 +13,11 @@ import TabPanel from "@mui/lab/TabPanel";
 import Shashlik from "./components/shashlik/shashlik";
 import ShashlikPage from "./components/shashlik/shashlik";
 import Salads from "./components/salad/salad";
+import Steakes from "./components/steake/steake";
+import Bread from "./components/bread/bread";
+import Deserts from "./components/desert/deserts";
+import Drinks from "./components/drinks/drinks";
+import Garnish from "./components/garnish/garnish";
 
 const foods = getData();
 
@@ -88,7 +93,7 @@ function App() {
                     whiteSpace: "nowrap",
                     "& > *": {
                       flex: "0 0 auto",
-                      minWidth: "160%", // Set a minimum width for each tab
+                      minWidth: "210%", // Set a minimum width for each tab
                       padding: "2px", // Add padding to the tabs for better spacing
                     },
                     "@media screen and (min-width:200%)": {
@@ -117,23 +122,34 @@ function App() {
                   />
                   <Tab
                     sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
-                    label="SALADS"
+                    label="STEAKES"
                     value="4"
                   />
                   <Tab
                     sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
-                    label="BREAD"
+                    label="SALADS"
                     value="5"
                   />
+
                   <Tab
                     sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
-                    label="GARNISH"
+                    label="BREAD"
                     value="6"
                   />
                   <Tab
                     sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
-                    label="DRINKS"
+                    label="GARNISH"
                     value="7"
+                  />
+                  <Tab
+                    sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
+                    label="DESERTS"
+                    value="8"
+                  />
+                  <Tab
+                    sx={{ color: "white", fontSize: "12px", fontWeight: "700" }}
+                    label="DRINKS"
+                    value="9"
                   />
                 </TabList>
               </div>
@@ -149,16 +165,22 @@ function App() {
               <ShashlikPage onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
             </TabPanel>
             <TabPanel value="4">
-              <Salads onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
+              <Steakes onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
             </TabPanel>
             <TabPanel value="5">
               <Salads onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
             </TabPanel>
             <TabPanel value="6">
-              <Salads onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
+              <Bread onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
             </TabPanel>
             <TabPanel value="7">
-              <Salads onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
+              <Garnish onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
+            </TabPanel>
+            <TabPanel value="8">
+              <Deserts onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
+            </TabPanel>
+            <TabPanel value="9">
+              <Drinks onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
             </TabPanel>
           </TabContext>
         </Box>

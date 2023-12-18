@@ -1,33 +1,33 @@
 export function BreadData() {
   return [
     {
-      title: "Caprice salad",
-      price: 9000,
-      Image: "./foods/salads/capriz.png",
+      title: "Bread (340gr)",
+      price: 3000,
+      Image: "./foods/bread/bread.png",
       id: 1,
     },
     {
-      title: "Ceaser salad",
-      price: 9000,
-      Image: "./foods/salads/ceaser.png",
+      title: "Beef burger (set 10.000 cola + french fries)",
+      price: 6000,
+      Image: "./foods/bread/burger.png",
       id: 2,
     },
     {
-      title: "French salad",
-      price: 10000,
-      Image: "./foods/salads/french.png",
+      title: "Chicken kebab (set 10.000 cola + french fries)",
+      price: 6000,
+      Image: "./foods/bread/lavash.png",
       id: 3,
     },
     {
-      title: "Greek salad",
-      price: 8000,
-      Image: "./foods/salads/greek.png",
+      title: "Butter bread (800gr)",
+      price: 5000,
+      Image: "./foods/bread/patir.png",
       id: 4,
     },
     {
-      title: "Herring under a Fur Coat",
-      price: 9000,
-      Image: "./foods/salads/herring.png",
+      title: "SAMSA",
+      price: 35000,
+      Image: "./foods/bread/samsa.png",
       id: 5,
     },
     {
