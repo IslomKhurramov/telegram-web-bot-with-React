@@ -1,12 +1,18 @@
 .App {
-  background-color: rgb(27, 27, 27);
+  background-color: black;
   min-height: 100vh;
 
   font-size: calc(10px + 2vmin);
   color: white;
 }
 .title_chaykhana {
-  text-align: center;
+  font-size: 26px;
+  position: relative;
+  text-align: end;
+  margin-right: 15px;
+  padding-top: 15px;
+  width: 98%;
+  text-shadow: 2px 2px 4px #ffffff;
 }
 .cards_container {
   display: flex;

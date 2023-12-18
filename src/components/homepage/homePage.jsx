@@ -14,6 +14,7 @@ import Deserts from "../desert/deserts";
 import Drinks from "../drinks/drinks";
 import Garnish from "../garnish/garnish";
 import Card from "../card/card";
+import "./homepage.css";
 
 const teleg = window.Telegram.WebApp;
 
@@ -86,7 +87,10 @@ const HomePage = () => {
 
   return (
     <div className="App">
-      <h1 className="title_chaykhana">Samarkand Chaykhana</h1>
+      <span>
+        <img src="../logo.png" alt="brend" className="brend" />
+      </span>
+      <h1 className="title_chaykhana">SAMARKAND CHAYKHANA</h1>
       <Cart cartItems={cartItems} onCheckout={onCheckout} />
 
       <div>
@@ -101,7 +105,7 @@ const HomePage = () => {
                   sx={{
                     display: "flex",
                     overflowX: "auto",
-                    backgroundColor: "rgba(228, 228, 228, 0.781)",
+                    backgroundColor: "black",
                     borderBottom: "1px solid white",
                     whiteSpace: "nowrap",
                     "& > *": {
