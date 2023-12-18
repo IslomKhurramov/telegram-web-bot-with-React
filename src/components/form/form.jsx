@@ -4,10 +4,19 @@ import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useHistory, useParams } from "react-router-dom";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import RadioGroup from "@mui/material/RadioGroup";
+import Radio from "@mui/material/Radio";
 
 const PaymentForm = () => {
   const history = useHistory();
+  const [deliveryOption, setDeliveryOption] = useState("");
 
+  const handleOptionChange = (event) => {
+    setDeliveryOption(event.target.value);
+  };
   const backToMainHandler = () => {
     history.push(`/`);
   };
@@ -29,6 +38,7 @@ const PaymentForm = () => {
         sx={{
           "& > :not(style)": { m: 1, width: "25ch" },
           border: "1px solid white",
+          borderRadius: "5px",
           marginRight: "30px",
           marginLeft: "30px",
           "& input": { color: "white !important", backgroundColor: "#2d3748" }, // Override text color
@@ -36,14 +46,46 @@ const PaymentForm = () => {
         }}
         noValidate
         autoComplete="off">
-        <TextField id="outlined-basic" label="Name" variant="filled" />
-        <TextField id="filled-basic" label="Address" variant="filled" />
         <TextField
+          sx={{ border: "1px solid white" }}
+          id="outlined-basic"
+          label="Name"
+          variant="filled"
+        />
+        <TextField
+          sx={{ border: "1px solid white" }}
           type="number"
           id="standard-basic"
           label="Phone Number"
           variant="filled"
         />
+        <div className="checkbox">
+          <RadioGroup
+            aria-label="delivery-option"
+            name="deliveryOption"
+            value={deliveryOption}
+            onChange={handleOptionChange}>
+            <FormControlLabel
+              value="takeout"
+              control={<Radio sx={{ color: "white" }} />}
+              label="Take Out"
+            />
+            <FormControlLabel
+              value="delivery"
+              control={<Radio sx={{ color: "white" }} />}
+              label="Delivery"
+            />
+          </RadioGroup>
+
+          {deliveryOption === "delivery" && (
+            <TextField
+              sx={{ border: "1px solid white" }}
+              id="filled-basic"
+              label="Address"
+              variant="filled"
+            />
+          )}
+        </div>
       </Box>
       <Button
         sx={{

@@ -1,5 +1,5 @@
 .form-container {
-  background-color: black;
+  background-color: rgb(0, 0, 0);
   min-height: 100vh;
   text-align: center;
   font-size: calc(10px + 2vmin);
@@ -30,4 +30,7 @@
   width: 70px;
   height: 70px;
   margin-top: 10px;
+}
+.checkbox {
+  padding-left: 30px;
 }
