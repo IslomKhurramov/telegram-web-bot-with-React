@@ -19,6 +19,7 @@ import Deserts from "./components/desert/deserts";
 import Drinks from "./components/drinks/drinks";
 import Garnish from "./components/garnish/garnish";
 import totalPrice from "./components/units/total_price";
+import PaymentForm from "./components/form/form";
 
 const foods = getData();
 
@@ -27,6 +28,7 @@ const teleg = window.Telegram.WebApp;
 function App() {
   const [cartItems, setCartItems] = useState([]);
   const [value, setValue] = React.useState("1");
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -76,23 +78,14 @@ function App() {
 
   useEffect(() => {
     const handleMainButtonClicked = () => {
-      return (
-        <div>
-          <h2>Payment Information</h2>
-          <form>
-            {/* Add form fields for payment information, address, name, and phone number */}
-            {/* Example: */}
-            <label>Name:</label>
-            <input type="text" name="name" required />
-            {/* Add more form fields as needed */}
-            <button type="submit">Submit Payment</button>
-          </form>
-        </div>
-      );
+      setShowPaymentForm(true);
     };
 
     teleg.onEvent("mainButtonClicked", handleMainButtonClicked);
-    return () => teleg.offEvent("mainButtonClicked", handleMainButtonClicked);
+
+    return () => {
+      teleg.offEvent("mainButtonClicked", handleMainButtonClicked);
+    };
   }, []);
 
   return (
@@ -207,6 +200,7 @@ function App() {
             </TabPanel>
           </TabContext>
         </Box>
+        <Box>{showPaymentForm && <PaymentForm />}</Box>
       </div>
     </div>
   );
