@@ -79,7 +79,7 @@ const PaymentForm = () => {
 
           {deliveryOption === "delivery" && (
             <TextField
-              sx={{ border: "1px solid white" }}
+              sx={{ border: "1px solid white", width: "100%" }}
               id="filled-basic"
               label="Address"
               variant="filled"
