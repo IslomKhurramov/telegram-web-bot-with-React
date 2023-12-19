@@ -14,6 +14,7 @@ const PaymentForm = (props) => {
   const history = useHistory();
   const [deliveryOption, setDeliveryOption] = useState("");
   const { onCheckout } = props;
+
   const handleOptionChange = (event) => {
     setDeliveryOption(event.target.value);
   };
@@ -88,6 +89,7 @@ const PaymentForm = (props) => {
         </div>
       </Box>
       <Button
+        type="checkout"
         onClick={onCheckout}
         sx={{
           color: "white",
