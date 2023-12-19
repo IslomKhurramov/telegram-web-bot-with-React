@@ -12,12 +12,22 @@ import {
 import { Switch } from "react-router-dom";
 import HomePage from "./components/homepage/homePage";
 
+const teleg = window.Telegram.WebApp;
+
 function App() {
+  useEffect(() => {
+    teleg.ready();
+  });
+
+  const onCheckout = () => {
+    teleg.MainButton.text = "Submit";
+    teleg.MainButton.show();
+  };
   return (
     <Router>
       <Switch>
         <Route path={"/payment"}>
-          <PaymentForm />
+          <PaymentForm onCheckout={onCheckout} />
         </Route>
         <Route path={"/"}>
           <HomePage />

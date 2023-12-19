@@ -69,9 +69,6 @@ const HomePage = () => {
     teleg.MainButton.text = "Payment";
     teleg.MainButton.show();
   };
-  useEffect(() => {
-    teleg.ready();
-  });
 
   useEffect(() => {
     const handleMainButtonClicked = () => {

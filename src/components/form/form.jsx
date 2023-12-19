@@ -10,10 +10,10 @@ import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 
-const PaymentForm = () => {
+const PaymentForm = (props) => {
   const history = useHistory();
   const [deliveryOption, setDeliveryOption] = useState("");
-
+  const { onCheckout } = props;
   const handleOptionChange = (event) => {
     setDeliveryOption(event.target.value);
   };
@@ -88,6 +88,7 @@ const PaymentForm = () => {
         </div>
       </Box>
       <Button
+        onClick={onCheckout}
         sx={{
           color: "white",
           marginTop: "20px",
