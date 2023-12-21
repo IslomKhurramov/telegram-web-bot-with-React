@@ -36,17 +36,6 @@ const HomePage = (props) => {
     teleg.MainButton.show();
   };
 
-  const onSendData = useCallback(() => {
-    console.log("Sending data:", JSON.stringify(cartItems));
-    teleg.onSendData(JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  useEffect(() => {
-    teleg.onEvent("mainButtonClicked", onSendData);
-
-    return () => teleg.offEvent("mainButtonClicked", onSendData);
-  }, [onSendData]);
-
   return (
     <div className="App">
       <span>
