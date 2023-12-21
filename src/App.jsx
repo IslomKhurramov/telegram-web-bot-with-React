@@ -65,9 +65,18 @@ function App() {
   }, [cartItems]);
 
   useEffect(() => {
-    teleg.onEvent("mainButtonClicked", onSendData);
+    if (teleg && teleg.ready && teleg.onEvent) {
+      teleg.ready();
+      teleg.onEvent("mainButtonClicked", onSendData);
+    } else {
+      console.error("Telegram WebApp API not properly loaded");
+    }
 
-    return () => teleg.offEvent("mainButtonClicked", onSendData);
+    return () => {
+      if (teleg && teleg.offEvent) {
+        teleg.offEvent("mainButtonClicked", onSendData);
+      }
+    };
   }, [onSendData]);
 
   return (
