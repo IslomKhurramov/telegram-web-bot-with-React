@@ -18,10 +18,10 @@ import "./homepage.css";
 
 const teleg = window.Telegram.WebApp;
 
-const HomePage = () => {
-  const [cartItems, setCartItems] = useState([]);
+const HomePage = (props) => {
+  const { cartItems, onAddItem, onRemoveItem } = props;
+
   const [value, setValue] = React.useState("1");
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -31,56 +31,10 @@ const HomePage = () => {
     teleg.ready();
   });
 
-  const onAddItem = (item) => {
-    const existItem = cartItems.find((c) => c.id === item.id);
-
-    if (existItem) {
-      const newData = cartItems.map((c) =>
-        c.id === item.id
-          ? { ...existItem, quantity: existItem.quantity + 1 }
-          : c
-      );
-      setCartItems(newData);
-    } else {
-      const newData = [...cartItems, { ...item, quantity: 1 }];
-      setCartItems(newData);
-    }
-  };
-  console.log("cart_items:", cartItems);
-
-  const onRemoveItem = (item) => {
-    const existItem = cartItems.find((c) => c.id === item.id);
-
-    if (existItem.quantity === 1) {
-      const newData = cartItems.filter((c) => c.id !== existItem.id);
-      setCartItems(newData);
-    } else {
-      const newData = cartItems.map((c) =>
-        c.id === existItem.id
-          ? { ...existItem, quantity: existItem.quantity - 1 }
-          : c
-      );
-      setCartItems(newData);
-    }
-  };
-  // console.log("cart_items:", cartItems);
-
   const onCheckout = () => {
     teleg.MainButton.text = "Payment";
     teleg.MainButton.show();
   };
-
-  useEffect(() => {
-    const handleMainButtonClicked = () => {
-      setShowPaymentForm(true);
-    };
-
-    teleg.onEvent("mainButtonClicked", handleMainButtonClicked);
-
-    return () => {
-      teleg.offEvent("mainButtonClicked", handleMainButtonClicked);
-    };
-  }, []);
 
   return (
     <div className="App">
