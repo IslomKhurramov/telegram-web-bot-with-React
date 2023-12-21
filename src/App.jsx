@@ -60,6 +60,7 @@ function App() {
   };
 
   const onSendData = useCallback(() => {
+    console.log("Sending data:", JSON.stringify(cartItems));
     teleg.onSendData(JSON.stringify(cartItems));
   }, [cartItems]);
 
