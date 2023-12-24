@@ -25,8 +25,15 @@ const PaymentForm = (props) => {
 
   const handleOptionChange = (event) => {
     setDeliveryOption(event.target.value);
-    setUserData(event.target.value);
+    // Update userData based on the selected option
+    setUserData({
+      name,
+      number,
+      deliveryOption: event.target.value,
+      address: event.target.value === "delivery" ? address : "",
+    });
   };
+
   const handleName = (event) => {
     setName(event.target.value);
   };
@@ -49,7 +56,7 @@ const PaymentForm = (props) => {
       name,
       number,
       deliveryOption,
-      address: deliveryOption === "delivery" ? "Your Delivery Address" : "",
+      address: deliveryOption === "delivery" ? address : "",
     };
 
     teleg.MainButton.text = "Submit";
