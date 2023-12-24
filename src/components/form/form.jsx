@@ -138,6 +138,7 @@ const PaymentForm = (props) => {
               id="filled-basic"
               label="Address"
               variant="filled"
+              value={"address"}
             />
           )}
         </div>
