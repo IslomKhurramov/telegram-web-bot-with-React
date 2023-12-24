@@ -138,7 +138,8 @@ const PaymentForm = (props) => {
               id="filled-basic"
               label="Address"
               variant="filled"
-              value={"address"}
+              value={address} // Fix: Bind value to the address state variable
+              onChange={(event) => setAddress(event.target.value)} // Add an onChange handler to update the address state
             />
           )}
         </div>
