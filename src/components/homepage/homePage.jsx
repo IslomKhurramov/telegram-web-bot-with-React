@@ -32,7 +32,7 @@ const HomePage = (props) => {
   });
 
   const onCheckout = () => {
-    teleg.MainButton.text = "Payment";
+    teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
   };
 

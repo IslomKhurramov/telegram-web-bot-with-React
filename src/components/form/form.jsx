@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./form.css";
 import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -10,17 +10,57 @@ import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 
+const teleg = window.Telegram.WebApp;
+
 const PaymentForm = (props) => {
   const history = useHistory();
   const [deliveryOption, setDeliveryOption] = useState("");
-  const { onCheckout } = props;
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+  const { onCheckout, setUserData, userData, cartItems } = props;
+
+  console.log("UserData11:", userData);
+  console.log("cartItems:", cartItems);
 
   const handleOptionChange = (event) => {
     setDeliveryOption(event.target.value);
+    setUserData(event.target.value);
+  };
+  const handleName = (event) => {
+    setName(event.target.value);
+  };
+  const handleNumber = (event) => {
+    setNumber(event.target.value);
   };
   const backToMainHandler = () => {
     history.push(`/`);
+    console.log("UserData:", userData);
   };
+  const onSendData = useCallback(() => {
+    teleg.sendData(JSON.stringify({ cartItems, userData }), [
+      cartItems,
+      userData,
+    ]);
+  }, [cartItems, userData]);
+
+  const submit = () => {
+    const userData = {
+      name,
+      number,
+      deliveryOption,
+      address: deliveryOption === "delivery" ? "Your Delivery Address" : "",
+    };
+
+    teleg.MainButton.text = "Submit";
+    teleg.MainButton.show();
+  };
+
+  useEffect(() => {
+    teleg.onEvent("mainButtonClicked", onSendData);
+
+    return () => teleg.offEvent("mainButtonClicked", onSendData);
+  }, [onSendData]);
+
   return (
     <div className="form-container">
       <div>
@@ -52,6 +92,8 @@ const PaymentForm = (props) => {
           id="outlined-basic"
           label="Name"
           variant="filled"
+          onChange={handleName}
+          value={name}
         />
         <TextField
           sx={{ border: "1px solid white" }}
@@ -59,6 +101,8 @@ const PaymentForm = (props) => {
           id="standard-basic"
           label="Phone Number"
           variant="filled"
+          onChange={handleNumber}
+          value={number}
         />
         <div className="checkbox">
           <RadioGroup
@@ -90,7 +134,7 @@ const PaymentForm = (props) => {
       </Box>
       <Button
         type="checkout"
-        onClick={onCheckout}
+        onClick={submit}
         sx={{
           color: "white",
           marginTop: "20px",
@@ -99,7 +143,7 @@ const PaymentForm = (props) => {
           fontSize: "12px",
         }}>
         {" "}
-        Submit
+        Save
       </Button>
     </div>
   );

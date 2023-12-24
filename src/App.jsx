@@ -16,11 +16,12 @@ const teleg = window.Telegram.WebApp;
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
+  const [userData, setUserData] = useState([]);
 
   const onAddItem = (item) => {
     const existItem = cartItems.find((c) => c.id === item.id);
-
     if (existItem) {
+      console.log("teleg", teleg);
       const newData = cartItems.map((c) =>
         c.id === item.id
           ? { ...existItem, quantity: existItem.quantity + 1 }
@@ -83,7 +84,12 @@ function App() {
     <Router>
       <Switch>
         <Route path={"/payment"}>
-          <PaymentForm onCheckout={onCheckout} />
+          <PaymentForm
+            cartItems={cartItems}
+            userData={userData}
+            setUserData={setUserData}
+            onCheckout={onCheckout}
+          />
         </Route>
         <Route path={"/"}>
           <HomePage
