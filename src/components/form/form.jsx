@@ -9,6 +9,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
+const userDataRef = useRef({});
 
 const teleg = window.Telegram.WebApp;
 
@@ -37,14 +38,14 @@ const PaymentForm = (props) => {
     console.log("UserData:", userData);
   };
   const onSendData = useCallback(() => {
-    teleg.sendData(JSON.stringify({ cartItems, userData }), [
-      cartItems,
-      userData,
-    ]);
-  }, [cartItems, userData]);
+    teleg.sendData(
+      JSON.stringify({ cartItems, userData: userDataRef.current }),
+      [cartItems, userDataRef.current]
+    );
+  }, [cartItems]);
 
   const submit = () => {
-    const userData = {
+    userDataRef.current = {
       name,
       number,
       deliveryOption,
