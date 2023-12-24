@@ -24,18 +24,18 @@ const PaymentForm = (props) => {
   console.log("UserData11:", userData);
   console.log("cartItems:", cartItems);
   const userDataRef = useRef({});
-
   const handleOptionChange = (event) => {
-    setDeliveryOption(event.target.value);
+    const selectedOption = event.target.value;
+    setDeliveryOption(selectedOption);
+
     // Update userData based on the selected option
     setUserData({
       name,
       number,
-      deliveryOption: event.target.value,
-      address: event.target.value === "delivery" ? address : "",
+      deliveryOption: selectedOption,
+      address: selectedOption === "delivery" ? address : "",
     });
   };
-
   const handleName = (event) => {
     setName(event.target.value);
   };
