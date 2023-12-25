@@ -16,14 +16,14 @@ const teleg = window.Telegram.WebApp;
 const PaymentForm = (props) => {
   const history = useHistory();
   const [deliveryOption, setDeliveryOption] = useState("");
+  const [paymentOption, setPaymentOption] = useState("");
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
   const { onCheckout, setUserData, userData, cartItems } = props;
 
-  console.log("UserData11:", userData);
-  console.log("cartItems:", cartItems);
   const userDataRef = useRef({});
+
   const handleOptionChange = (event) => {
     const selectedOption = event.target.value;
     setDeliveryOption(selectedOption);
@@ -36,6 +36,21 @@ const PaymentForm = (props) => {
       address: selectedOption === "delivery" ? address : "",
     });
   };
+
+  const handlePaymentOption = (event) => {
+    const selectedOptionPayment = event.target.value;
+    setPaymentOption(selectedOptionPayment);
+
+    setUserData({
+      name,
+      number,
+      deliveryOption: selectedOption,
+      address: selectedOption === "delivery" ? address : "",
+      paymentOption: selectedOptionPayment,
+      deposited: selectedOptionPayment === "transfer" ? depositImage : "",
+    });
+  };
+
   const handleName = (event) => {
     setName(event.target.value);
   };
@@ -140,6 +155,37 @@ const PaymentForm = (props) => {
               variant="filled"
               value={address} // Fix: Bind value to the address state variable
               onChange={(event) => setAddress(event.target.value)} // Add an onChange handler to update the address state
+            />
+          )}
+        </div>
+
+        <div className="checkbox">
+          <RadioGroup
+            aria-label="delivery-option"
+            name="paymentOption"
+            value={paymentOption}
+            onChange={handlePaymentOption}>
+            <FormControlLabel
+              value="Cash"
+              control={<Radio sx={{ color: "white" }} />}
+              label="Cash"
+            />
+            <FormControlLabel
+              value="transfer"
+              control={<Radio sx={{ color: "white" }} />}
+              label="Transfer"
+            />
+          </RadioGroup>
+
+          {paymentOption === "transfer" && (
+            <Input
+              type="file"
+              accept=".jpeg, .jpg, .png, image/jpeg, image/jpg, image/png"
+              onChange={handleImageChange}
+              style={{
+                color: "white",
+                marginTop: "10px",
+              }}
             />
           )}
         </div>
