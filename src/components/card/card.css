@@ -34,8 +34,9 @@
   }
 }
 .food_title {
-  font-family: "Play", sans-serif;
+  font-family: "Dancing Script", cursive;
   font-weight: 300;
+  text-align: center;
 }
 .food_price {
   font-size: 18px;
@@ -44,7 +45,7 @@
 .card_body {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 .btn_container {
