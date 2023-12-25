@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600&family=Play&display=swap");
+
 .card_container {
   width: 40%;
   background-color: #2d3748;
@@ -32,7 +34,7 @@
   }
 }
 .food_title {
-  font-family: cursive;
+  font-family: "Play", sans-serif;
   font-weight: 300;
 }
 .food_price {
