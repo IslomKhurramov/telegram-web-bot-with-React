@@ -59,14 +59,6 @@ const PaymentForm = (props) => {
     const uploadedFile = event.target.files[0];
     setFile(uploadedFile);
   };
-  const handleSubmit = () => {
-    // Handle the submission logic here, including paymentOption and file
-    console.log("Selected Payment Option:", paymentOption);
-    if (file) {
-      console.log("Uploaded File:", file);
-      // Perform actions with the uploaded file, such as sending it to the server
-    }
-  };
 
   const handleName = (event) => {
     setName(event.target.value);
@@ -76,7 +68,6 @@ const PaymentForm = (props) => {
   };
   const backToMainHandler = () => {
     history.push(`/`);
-    console.log("UserData:", userData);
   };
 
   const onSendData = useCallback(() => {
@@ -92,6 +83,7 @@ const PaymentForm = (props) => {
       number,
       deliveryOption,
       address: deliveryOption === "delivery" ? address : "",
+      paymentOption: paymentOption === "transfer" ? file : null,
     };
 
     teleg.MainButton.text = "Submit";
@@ -208,8 +200,6 @@ const PaymentForm = (props) => {
               {/* You can display additional UI or information related to file upload if needed */}
             </div>
           )}
-
-          <button onClick={handleSubmit}>Submit</button>
         </div>
       </Box>
       <Button
