@@ -28,8 +28,28 @@ const PaymentForm = (props) => {
   const handleOptionChange = (event) => {
     const selectedOption = event.target.value;
     setDeliveryOption(selectedOption);
-  };
 
+    // Update userData based on the selected option
+    if (selectedOption === "transfer") {
+      const uploadedFile = file;
+      setUserData({
+        name,
+        number,
+        deliveryOption: selectedOption,
+        address: selectedOption === "delivery" ? address : "",
+        deposited: uploadedFile,
+      });
+    } else {
+      // For other options, update userData without the file
+      setUserData({
+        name,
+        number,
+        deliveryOption: selectedOption,
+        address: selectedOption === "delivery" ? address : "",
+        deposited: null, // or any other default value
+      });
+    }
+  };
   const handlePaymentOption = (event) => {
     const selectedOption = event.target.value;
     setPaymentOption(selectedOption);
@@ -43,33 +63,20 @@ const PaymentForm = (props) => {
   const handleName = (event) => {
     setName(event.target.value);
   };
-
   const handleNumber = (event) => {
     setNumber(event.target.value);
   };
+  const backToMainHandler = () => {
+    history.push(`/`);
+  };
 
-  useEffect(() => {
-    // Update userData based on the selected option
-    if (deliveryOption === "transfer") {
-      const uploadedFile = file;
-      setUserData({
-        name,
-        number,
-        deliveryOption,
-        address: deliveryOption === "delivery" ? address : "",
-        deposited: uploadedFile,
-      });
-    } else {
-      // For other options, update userData without the file
-      setUserData({
-        name,
-        number,
-        deliveryOption,
-        address: deliveryOption === "delivery" ? address : "",
-        deposited: null,
-      });
-    }
-  }, [deliveryOption, file, name, number, address, setUserData]);
+  const onSendData = useCallback(() => {
+    teleg.sendData(
+      JSON.stringify({ cartItems, userData: userDataRef.current }),
+      [cartItems, userDataRef.current]
+    );
+  }, [cartItems]);
+
   const submit = () => {
     userDataRef.current = {
       name,
@@ -79,18 +86,15 @@ const PaymentForm = (props) => {
       deposited: paymentOption === "transfer" ? file : null,
     };
 
-    // Assuming teleg.MainButton is correctly set up
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
-
-    // Log the user data for testing
-    console.log("UserDataREF:", userDataRef.current);
-
-    // Additional logic or API calls can be added here
   };
-  const backToMainHandler = () => {
-    history.push("/");
-  };
+
+  useEffect(() => {
+    teleg.onEvent("mainButtonClicked", onSendData);
+
+    return () => teleg.offEvent("mainButtonClicked", onSendData);
+  }, [onSendData]);
   return (
     <div className="form-container">
       <div>
