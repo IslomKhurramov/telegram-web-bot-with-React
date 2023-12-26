@@ -91,11 +91,13 @@ const PaymentForm = (props) => {
   };
 
   useEffect(() => {
-    // Update userDataRef.current whenever paymentOption or file changes
-    userDataRef.current = {
-      ...userDataRef.current,
-      deposited: paymentOption === "transfer" ? file : null,
-    };
+    // Ensure paymentOption and file are defined before updating userDataRef.current
+    if (paymentOption !== undefined && file !== undefined) {
+      userDataRef.current = {
+        ...userDataRef.current,
+        deposited: paymentOption === "transfer" ? file : null,
+      };
+    }
 
     // Add event listeners
     teleg.onEvent("mainButtonClicked", onSendData);
