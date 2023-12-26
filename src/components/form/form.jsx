@@ -88,6 +88,7 @@ const PaymentForm = (props) => {
 
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
+    console.log("UserDataREF:", userDataRef.current);
   };
 
   useEffect(() => {
