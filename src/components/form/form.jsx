@@ -30,29 +30,20 @@ const PaymentForm = (props) => {
     setDeliveryOption(selectedOption);
 
     // Update userData based on the selected option
-    if (selectedOption === "transfer") {
-      const uploadedFile = file;
-      setUserData({
-        name,
-        number,
-        deliveryOption: selectedOption,
-        address: selectedOption === "delivery" ? address : "",
-        deposited: uploadedFile,
-      });
-    } else {
-      // For other options, update userData without the file
-      setUserData({
-        name,
-        number,
-        deliveryOption: selectedOption,
-        address: selectedOption === "delivery" ? address : "",
-        deposited: null, // or any other default value
-      });
-    }
+
+    const uploadedFile = file;
+    setUserData({
+      name,
+      number,
+      deliveryOption: selectedOption,
+      address: selectedOption === "delivery" ? address : "",
+      paymentOption: paymentOption,
+      deposited: uploadedFile,
+    });
   };
   const handlePaymentOption = (event) => {
-    const selectedOption = event.target.value;
-    setPaymentOption(selectedOption);
+    const selectedOptionPayment = event.target.value;
+    setPaymentOption(selectedOptionPayment);
   };
 
   const handleImageChange = (event) => {
@@ -106,7 +97,7 @@ const PaymentForm = (props) => {
     return () => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [onSendData, paymentOption, file]);
+  }, [onSendData, paymentOption, file, userData]);
   return (
     <div className="form-container">
       <div>
