@@ -83,7 +83,7 @@ const PaymentForm = (props) => {
       number,
       deliveryOption,
       address: deliveryOption === "delivery" ? address : "",
-      paymentOption: paymentOption === "transfer" ? file : null,
+      deposited: paymentOption === "transfer" ? file : null,
     };
 
     teleg.MainButton.text = "Submit";
