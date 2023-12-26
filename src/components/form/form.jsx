@@ -3,7 +3,10 @@ import "./form.css";
 import { Button, Input } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import { useHistory, useParams } from "react-router-dom";
+import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import { useRef } from "react";
@@ -11,28 +14,20 @@ import { useRef } from "react";
 const teleg = window.Telegram.WebApp;
 
 const PaymentForm = (props) => {
+  const history = useHistory();
   const [deliveryOption, setDeliveryOption] = useState("");
   const [paymentOption, setPaymentOption] = useState("");
   const [file, setFile] = useState(null);
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
-  const { setUserData, cartItems } = props;
+  const { onCheckout, setUserData, userData, cartItems } = props;
 
   const userDataRef = useRef({});
 
   const handleOptionChange = (event) => {
     const selectedOption = event.target.value;
     setDeliveryOption(selectedOption);
-
-    const uploadedFile = selectedOption === "transfer" ? file : null;
-    setUserData({
-      name,
-      number,
-      deliveryOption: selectedOption,
-      address: selectedOption === "delivery" ? address : "",
-      deposited: uploadedFile,
-    });
   };
 
   const handlePaymentOption = (event) => {
@@ -53,6 +48,29 @@ const PaymentForm = (props) => {
     setNumber(event.target.value);
   };
 
+  useEffect(() => {
+    // Update userData based on the selected option
+    if (deliveryOption === "transfer") {
+      const uploadedFile = file;
+      setUserData({
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        deposited: uploadedFile,
+      });
+    } else {
+      // For other options, update userData without the file
+      setUserData({
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        deposited: null,
+      });
+    }
+  }, [deliveryOption, file, name, number, address, setUserData]);
+
   const submit = () => {
     userDataRef.current = {
       name,
@@ -71,27 +89,13 @@ const PaymentForm = (props) => {
 
     // Additional logic or API calls can be added here
   };
-
-  useEffect(() => {
-    // Event listener for when the main button is clicked
-    const onSendData = () => {
-      teleg.sendData(
-        JSON.stringify({ cartItems, userData: userDataRef.current }),
-        [cartItems, userDataRef.current]
-      );
-    };
-
-    teleg.onEvent("mainButtonClicked", onSendData);
-
-    return () => teleg.offEvent("mainButtonClicked", onSendData);
-  }, [cartItems, userDataRef]);
-
   return (
     <div className="form-container">
       <div>
         <span className="brend_box">
           <img
-            src="../logo.png" // Replace with the correct path
+            onClick={backToMainHandler}
+            src="../logo.png"
             alt="brend"
             className="logo"
           />
@@ -106,19 +110,44 @@ const PaymentForm = (props) => {
           borderRadius: "5px",
           marginRight: "30px",
           marginLeft: "30px",
-          "& input": { color: "white !important", backgroundColor: "#2d3748" },
+          "& input": { color: "white !important", backgroundColor: "#2d3748" }, // Override text color
           "& label": { color: "white !important" },
         }}
         noValidate
         autoComplete="off">
-        {/* Other form elements */}
+        <TextField
+          sx={{ border: "1px solid white" }}
+          id="outlined-basic"
+          label="Name"
+          variant="filled"
+          onChange={handleName}
+          value={name}
+        />
+        <TextField
+          sx={{ border: "1px solid white" }}
+          type="number"
+          id="standard-basic"
+          label="Phone Number"
+          variant="filled"
+          onChange={handleNumber}
+          value={number}
+        />
         <div className="checkbox">
           <RadioGroup
             aria-label="delivery-option"
             name="deliveryOption"
             value={deliveryOption}
             onChange={handleOptionChange}>
-            {/* Radio buttons for delivery options */}
+            <FormControlLabel
+              value="takeout"
+              control={<Radio sx={{ color: "white" }} />}
+              label="Take Out"
+            />
+            <FormControlLabel
+              value="delivery"
+              control={<Radio sx={{ color: "white" }} />}
+              label="Delivery"
+            />
           </RadioGroup>
 
           {deliveryOption === "delivery" && (
@@ -127,8 +156,8 @@ const PaymentForm = (props) => {
               id="filled-basic"
               label="Address"
               variant="filled"
-              value={address}
-              onChange={(event) => setAddress(event.target.value)}
+              value={address} // Fix: Bind value to the address state variable
+              onChange={(event) => setAddress(event.target.value)} // Add an onChange handler to update the address state
             />
           )}
         </div>
@@ -139,7 +168,16 @@ const PaymentForm = (props) => {
             name="paymentOption"
             value={paymentOption}
             onChange={handlePaymentOption}>
-            {/* Radio buttons for payment options */}
+            <FormControlLabel
+              value="Cash"
+              control={<Radio sx={{ color: "white" }} />}
+              label="Cash"
+            />
+            <FormControlLabel
+              value="transfer"
+              control={<Radio sx={{ color: "white" }} />}
+              label="Transfer"
+            />
           </RadioGroup>
 
           {paymentOption === "transfer" && (
@@ -150,6 +188,7 @@ const PaymentForm = (props) => {
                 onChange={handleImageChange}
                 style={{ color: "white", marginTop: "10px" }}
               />
+              {/* You can display additional UI or information related to file upload if needed */}
             </div>
           )}
         </div>
@@ -164,10 +203,10 @@ const PaymentForm = (props) => {
           fontWeight: "bold",
           fontSize: "12px",
         }}>
+        {" "}
         Save
       </Button>
     </div>
   );
 };
-
 export default PaymentForm;
