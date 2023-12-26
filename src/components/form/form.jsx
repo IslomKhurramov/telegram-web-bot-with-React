@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./form.css";
-import { Button } from "@mui/material";
+import { Button, Input } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useHistory, useParams } from "react-router-dom";
@@ -17,6 +17,7 @@ const PaymentForm = (props) => {
   const history = useHistory();
   const [deliveryOption, setDeliveryOption] = useState("");
   const [paymentOption, setPaymentOption] = useState("");
+  const [file, setFile] = useState(null);
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
@@ -29,26 +30,42 @@ const PaymentForm = (props) => {
     setDeliveryOption(selectedOption);
 
     // Update userData based on the selected option
-    setUserData({
-      name,
-      number,
-      deliveryOption: selectedOption,
-      address: selectedOption === "delivery" ? address : "",
-    });
+    if (selectedOption === "transfer") {
+      const uploadedFile = file;
+      setUserData({
+        name,
+        number,
+        deliveryOption: selectedOption,
+        address: selectedOption === "delivery" ? address : "",
+        deposited: uploadedFile,
+      });
+    } else {
+      // For other options, update userData without the file
+      setUserData({
+        name,
+        number,
+        deliveryOption: selectedOption,
+        address: selectedOption === "delivery" ? address : "",
+        deposited: null, // or any other default value
+      });
+    }
+  };
+  const handlePaymentOption = (event) => {
+    const selectedOption = event.target.value;
+    setPaymentOption(selectedOption);
   };
 
-  const handlePaymentOption = (event) => {
-    const selectedOptionPayment = event.target.value;
-    setPaymentOption(selectedOptionPayment);
-
-    setUserData({
-      name,
-      number,
-      deliveryOption: selectedOption,
-      address: selectedOption === "delivery" ? address : "",
-      paymentOption: selectedOptionPayment,
-      deposited: selectedOptionPayment === "transfer" ? depositImage : "",
-    });
+  const handleImageChange = (event) => {
+    const uploadedFile = event.target.files[0];
+    setFile(uploadedFile);
+  };
+  const handleSubmit = () => {
+    // Handle the submission logic here, including paymentOption and file
+    console.log("Selected Payment Option:", paymentOption);
+    if (file) {
+      console.log("Uploaded File:", file);
+      // Perform actions with the uploaded file, such as sending it to the server
+    }
   };
 
   const handleName = (event) => {
@@ -178,16 +195,21 @@ const PaymentForm = (props) => {
           </RadioGroup>
 
           {paymentOption === "transfer" && (
-            <Input
-              type="file"
-              accept=".jpeg, .jpg, .png, image/jpeg, image/jpg, image/png"
-              onChange={handleImageChange}
-              style={{
-                color: "white",
-                marginTop: "10px",
-              }}
-            />
+            <div>
+              <Input
+                type="file"
+                accept=".jpeg, .jpg, .png, image/jpeg, image/jpg, image/png"
+                onChange={handleImageChange}
+                style={{
+                  color: "white",
+                  marginTop: "10px",
+                }}
+              />
+              {/* You can display additional UI or information related to file upload if needed */}
+            </div>
           )}
+
+          <button onClick={handleSubmit}>Submit</button>
         </div>
       </Box>
       <Button
