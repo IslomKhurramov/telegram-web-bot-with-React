@@ -74,6 +74,7 @@ const PaymentForm = (props) => {
       number,
       deliveryOption,
       address: deliveryOption === "delivery" ? address : "",
+      paymentOption: paymentOption,
       deposited: paymentOption === "transfer" ? file : null,
     };
 
@@ -82,14 +83,6 @@ const PaymentForm = (props) => {
   };
 
   useEffect(() => {
-    // Ensure paymentOption and file are defined before updating userDataRef.current
-    if (paymentOption !== undefined && file !== undefined) {
-      userDataRef.current = {
-        ...userDataRef.current,
-        deposited: paymentOption === "transfer" ? file : null,
-      };
-    }
-
     // Add event listeners
     teleg.onEvent("mainButtonClicked", onSendData);
 
@@ -97,7 +90,7 @@ const PaymentForm = (props) => {
     return () => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [onSendData, paymentOption, file, userData]);
+  }, [onSendData]);
   return (
     <div className="form-container">
       <div>
