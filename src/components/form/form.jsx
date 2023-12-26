@@ -25,6 +25,11 @@ const PaymentForm = (props) => {
 
   const userDataRef = useRef({});
 
+  const handlePaymentOption = (event) => {
+    const selectedOptionPayment = event.target.value;
+    setPaymentOption(selectedOptionPayment);
+  };
+
   const handleOptionChange = (event) => {
     const selectedOption = event.target.value;
     setDeliveryOption(selectedOption);
@@ -40,10 +45,6 @@ const PaymentForm = (props) => {
       paymentOption: paymentOption,
       deposited: uploadedFile,
     });
-  };
-  const handlePaymentOption = (event) => {
-    const selectedOptionPayment = event.target.value;
-    setPaymentOption(selectedOptionPayment);
   };
 
   const handleImageChange = (event) => {
@@ -69,13 +70,14 @@ const PaymentForm = (props) => {
   }, [cartItems]);
 
   const submit = () => {
+    const uploadedFile = file;
     userDataRef.current = {
       name,
       number,
       deliveryOption,
       address: deliveryOption === "delivery" ? address : "",
       paymentOption: paymentOption,
-      deposited: paymentOption === "transfer" ? file : null,
+      deposited: paymentOption === "transfer" ? uploadedFile : null,
     };
 
     teleg.MainButton.text = "Submit";
