@@ -91,10 +91,20 @@ const PaymentForm = (props) => {
   };
 
   useEffect(() => {
+    // Update userDataRef.current whenever paymentOption or file changes
+    userDataRef.current = {
+      ...userDataRef.current,
+      deposited: paymentOption === "transfer" ? file : null,
+    };
+
+    // Add event listeners
     teleg.onEvent("mainButtonClicked", onSendData);
 
-    return () => teleg.offEvent("mainButtonClicked", onSendData);
-  }, [onSendData]);
+    // Remove event listeners when the component unmounts or when dependencies change
+    return () => {
+      teleg.offEvent("mainButtonClicked", onSendData);
+    };
+  }, [onSendData, paymentOption, file]);
   return (
     <div className="form-container">
       <div>
