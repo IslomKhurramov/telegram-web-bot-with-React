@@ -70,7 +70,6 @@ const PaymentForm = (props) => {
       });
     }
   }, [deliveryOption, file, name, number, address, setUserData]);
-
   const submit = () => {
     userDataRef.current = {
       name,
@@ -88,6 +87,9 @@ const PaymentForm = (props) => {
     console.log("UserDataREF:", userDataRef.current);
 
     // Additional logic or API calls can be added here
+  };
+  const backToMainHandler = () => {
+    history.push("/");
   };
   return (
     <div className="form-container">
@@ -164,7 +166,7 @@ const PaymentForm = (props) => {
 
         <div className="checkbox">
           <RadioGroup
-            aria-label="payment-option"
+            aria-label="delivery-option"
             name="paymentOption"
             value={paymentOption}
             onChange={handlePaymentOption}>
@@ -186,7 +188,10 @@ const PaymentForm = (props) => {
                 type="file"
                 accept=".jpeg, .jpg, .png, image/jpeg, image/jpg, image/png"
                 onChange={handleImageChange}
-                style={{ color: "white", marginTop: "10px" }}
+                style={{
+                  color: "white",
+                  marginTop: "10px",
+                }}
               />
               {/* You can display additional UI or information related to file upload if needed */}
             </div>
