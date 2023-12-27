@@ -77,9 +77,9 @@ const PaymentForm = (props) => {
       deliveryOption,
       address: deliveryOption === "delivery" ? address : "",
       paymentOption: paymentOption,
-      deposited: paymentOption === "transfer" ? uploadedFile : null,
+      deposited: uploadedFile,
     };
-
+    console.log("DATAS:", uploadedFile);
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
   };
