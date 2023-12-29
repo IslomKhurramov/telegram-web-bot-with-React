@@ -29,22 +29,15 @@ const PaymentForm = (props) => {
     const selectedOptionPayment = event.target.value;
     setPaymentOption(selectedOptionPayment);
   };
-
   const handleOptionChange = (event) => {
     const selectedOption = event.target.value;
     setDeliveryOption(selectedOption);
 
-    // Update userData based on the selected option
-
-    const uploadedFile = file;
-    setUserData({
-      name,
-      number,
+    setUserData((prevUserData) => ({
+      ...prevUserData,
       deliveryOption: selectedOption,
       address: selectedOption === "delivery" ? address : "",
-      paymentOption: paymentOption,
-      deposited: uploadedFile,
-    });
+    }));
   };
 
   const handleImageChange = (event) => {
@@ -62,13 +55,6 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
-  const onSendData = useCallback(() => {
-    teleg.sendData(
-      JSON.stringify({ cartItems, userData: userDataRef.current }),
-      [cartItems, userDataRef.current]
-    );
-  }, [cartItems]);
-
   const submit = () => {
     const uploadedFile = file;
     userDataRef.current = {
@@ -80,19 +66,25 @@ const PaymentForm = (props) => {
       deposited: uploadedFile,
     };
     console.log("DATAS:", userDataRef.current);
+    setFile(null); // Clear the file input after submitting
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
   };
 
   useEffect(() => {
-    // Add event listeners
+    const onSendData = () => {
+      teleg.sendData(
+        JSON.stringify({ cartItems, userData: userDataRef.current }),
+        [cartItems, userDataRef.current]
+      );
+    };
+
     teleg.onEvent("mainButtonClicked", onSendData);
 
-    // Remove event listeners when the component unmounts or when dependencies change
     return () => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [onSendData]);
+  }, [cartItems]);
   return (
     <div className="form-container">
       <div>
