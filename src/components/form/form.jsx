@@ -10,6 +10,7 @@ import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import { useRef } from "react";
+
 const teleg = window.Telegram.WebApp;
 
 const PaymentForm = (props) => {
@@ -27,36 +28,6 @@ const PaymentForm = (props) => {
   const handlePaymentOption = (event) => {
     const selectedOptionPayment = event.target.value;
     setPaymentOption(selectedOptionPayment);
-  };
-
-  const sendPictureToBot = async () => {
-    try {
-      // Prepare form data
-      const formData = new FormData();
-      formData.append("photo", file);
-
-      // Make an API call or use the appropriate method to send the picture
-      // This is a placeholder, and you may need to replace it with the actual API endpoint or method
-      const response = await fetch(
-        "6805870358:AAGHQ8HKU4br3C3_L6ICWLwxtCMYx4RjN-w",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      // Check if the request was successful
-      if (response.ok) {
-        console.log("Picture sent successfully");
-        // Additional logic if needed
-      } else {
-        console.error("Failed to send picture");
-        // Handle errors
-      }
-    } catch (error) {
-      console.error("Error sending picture", error);
-      // Handle errors
-    }
   };
 
   const handleOptionChange = (event) => {
@@ -108,8 +79,6 @@ const PaymentForm = (props) => {
       paymentOption: paymentOption,
       deposited: uploadedFile,
     };
-
-    sendPictureToBot();
     console.log("DATAS:", userDataRef.current);
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
