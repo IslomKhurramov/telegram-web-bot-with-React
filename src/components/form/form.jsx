@@ -42,16 +42,7 @@ const PaymentForm = (props) => {
   };
 
   const handleImageChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (file) {
-      console.log("files:::", file);
-    } else {
-      console.log("no file");
-    }
+    setFile(event.target.files[1]);
   };
 
   const handleName = (event) => {
@@ -84,12 +75,6 @@ const PaymentForm = (props) => {
       teleg.MainButton.show();
     } else {
       console.warn("No file uploaded."); // Log a warning if file is not selected
-    }
-
-    if (file) {
-      console.log("files:::", file);
-    } else {
-      console.log("no file");
     }
   };
 
