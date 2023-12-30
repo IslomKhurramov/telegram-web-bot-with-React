@@ -56,16 +56,16 @@ const PaymentForm = (props) => {
   };
 
   const submit = () => {
-    console.log("+++", file);
+    const uploadedFile = file;
 
-    if (file) {
+    if (uploadedFile) {
       userDataRef.current = {
         name,
         number,
         deliveryOption,
         address: deliveryOption === "delivery" ? address : "",
         paymentOption,
-        deposited: file,
+        deposited: uploadedFile,
       };
       console.log("DATAS:", userDataRef.current);
       setFile(null); // Clear the file input after submitting
@@ -186,6 +186,7 @@ const PaymentForm = (props) => {
             <div>
               <Input
                 type="file"
+                value={file}
                 accept=".jpeg, .jpg, .png, image/jpeg, image/jpg, image/png"
                 onChange={handleImageChange}
                 style={{
