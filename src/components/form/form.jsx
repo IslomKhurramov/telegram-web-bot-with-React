@@ -42,7 +42,7 @@ const PaymentForm = (props) => {
   };
 
   const handleImageChange = (event) => {
-    setFile(event.target.files[1]);
+    setFile(event.target.files[0]);
   };
 
   const handleName = (event) => {
