@@ -42,11 +42,18 @@ const PaymentForm = (props) => {
   };
 
   const handleImageChange = (event) => {
-    const uploadedFile = event.target.files[0];
-    console.log("Selected File:", uploadedFile);
-
-    setFile(uploadedFile);
+    setFile(event.target.files[0]);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (file) {
+      console.log("files:::", file);
+    } else {
+      console.log("no file");
+    }
+  };
+
   const handleName = (event) => {
     setName(event.target.value);
   };
@@ -57,39 +64,30 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
-  const submit = async () => {
-    const uploadedFile = file;
+  const submit = (e) => {
+    e.preventDefault();
 
-    if (uploadedFile) {
-      try {
-        // Assuming you have 'bot' and 'chatId' accessible in this scope
-        const sendPhotoResponse = await bot.sendPhoto(
-          chatId,
-          uploadedFile.buffer,
-          {
-            caption: "Uploaded Photo",
-          }
-        );
-
-        const fileId = sendPhotoResponse.photo[0].file_id;
-
-        userDataRef.current = {
-          name,
-          number,
-          deliveryOption,
-          address: deliveryOption === "delivery" ? address : "",
-          paymentOption: paymentOption,
-          deposited: {
-            file_id: fileId,
-          },
-        };
-        console.log("DATAS:", userDataRef.current);
-        setFile(null);
-      } catch (error) {
-        console.error("Error sending photo:", error);
-      }
+    if (file) {
+      userDataRef.current = {
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        paymentOption,
+        deposited: file,
+      };
+      console.log("DATAS:", userDataRef.current);
+      setFile(null); // Clear the file input after submitting
+      teleg.MainButton.text = "Submit";
+      teleg.MainButton.show();
     } else {
-      console.warn("No file uploaded.");
+      console.warn("No file uploaded."); // Log a warning if file is not selected
+    }
+
+    if (file) {
+      console.log("files:::", file);
+    } else {
+      console.log("no file");
     }
   };
 
