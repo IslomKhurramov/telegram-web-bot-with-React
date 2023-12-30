@@ -67,6 +67,8 @@ const PaymentForm = (props) => {
   const submit = (e) => {
     e.preventDefault();
 
+    console.log("+++", file);
+
     if (file) {
       userDataRef.current = {
         name,
