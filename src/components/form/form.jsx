@@ -68,7 +68,7 @@ const PaymentForm = (props) => {
         deposited: uploadedFile,
       };
       console.log("DATAS:", userDataRef.current);
-      setFile(null); // Clear the file input after submitting
+      // setFile(null); // Clear the file input after submitting
       teleg.MainButton.text = "Submit";
       teleg.MainButton.show();
     } else {
@@ -186,7 +186,6 @@ const PaymentForm = (props) => {
             <div>
               <Input
                 type="file"
-                value={file}
                 accept=".jpeg, .jpg, .png, image/jpeg, image/jpg, image/png"
                 onChange={handleImageChange}
                 style={{
