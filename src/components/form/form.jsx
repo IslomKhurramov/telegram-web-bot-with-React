@@ -29,6 +29,7 @@ const PaymentForm = (props) => {
     const selectedOptionPayment = event.target.value;
     setPaymentOption(selectedOptionPayment);
   };
+
   const handleOptionChange = (event) => {
     const selectedOption = event.target.value;
     setDeliveryOption(selectedOption);
@@ -42,9 +43,10 @@ const PaymentForm = (props) => {
 
   const handleImageChange = (event) => {
     const uploadedFile = event.target.files[0];
+    console.log("Selected File:", uploadedFile);
+
     setFile(uploadedFile);
   };
-
   const handleName = (event) => {
     setName(event.target.value);
   };
@@ -55,20 +57,31 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
+  const onSendData = useCallback(() => {
+    teleg.sendData(
+      JSON.stringify({ cartItems, userData: userDataRef.current }),
+      [cartItems, userDataRef.current]
+    );
+  }, [cartItems]);
   const submit = () => {
     const uploadedFile = file;
-    userDataRef.current = {
-      name,
-      number,
-      deliveryOption,
-      address: deliveryOption === "delivery" ? address : "",
-      paymentOption: paymentOption,
-      deposited: uploadedFile,
-    };
-    console.log("DATAS:", userDataRef.current);
-    setFile(null); // Clear the file input after submitting
-    teleg.MainButton.text = "Submit";
-    teleg.MainButton.show();
+
+    if (uploadedFile) {
+      userDataRef.current = {
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        paymentOption,
+        deposited: uploadedFile,
+      };
+      console.log("DATAS:", userDataRef.current);
+      setFile(null); // Clear the file input after submitting
+      teleg.MainButton.text = "Submit";
+      teleg.MainButton.show();
+    } else {
+      console.warn("No file uploaded."); // Log a warning if file is not selected
+    }
   };
 
   useEffect(() => {
@@ -85,6 +98,7 @@ const PaymentForm = (props) => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
   }, [cartItems]);
+
   return (
     <div className="form-container">
       <div>
