@@ -57,30 +57,39 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
-  const onSendData = useCallback(() => {
-    teleg.sendData(
-      JSON.stringify({ cartItems, userData: userDataRef.current }),
-      [cartItems, userDataRef.current]
-    );
-  }, [cartItems]);
-  const submit = () => {
+  const submit = async () => {
     const uploadedFile = file;
 
     if (uploadedFile) {
-      userDataRef.current = {
-        name,
-        number,
-        deliveryOption,
-        address: deliveryOption === "delivery" ? address : "",
-        paymentOption,
-        deposited: uploadedFile,
-      };
-      console.log("DATAS:", userDataRef.current);
-      setFile(null); // Clear the file input after submitting
-      teleg.MainButton.text = "Submit";
-      teleg.MainButton.show();
+      try {
+        // Assuming you have 'bot' and 'chatId' accessible in this scope
+        const sendPhotoResponse = await bot.sendPhoto(
+          chatId,
+          uploadedFile.buffer,
+          {
+            caption: "Uploaded Photo",
+          }
+        );
+
+        const fileId = sendPhotoResponse.photo[0].file_id;
+
+        userDataRef.current = {
+          name,
+          number,
+          deliveryOption,
+          address: deliveryOption === "delivery" ? address : "",
+          paymentOption: paymentOption,
+          deposited: {
+            file_id: fileId,
+          },
+        };
+        console.log("DATAS:", userDataRef.current);
+        setFile(null);
+      } catch (error) {
+        console.error("Error sending photo:", error);
+      }
     } else {
-      console.warn("No file uploaded."); // Log a warning if file is not selected
+      console.warn("No file uploaded.");
     }
   };
 
