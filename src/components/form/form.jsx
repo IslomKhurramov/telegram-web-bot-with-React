@@ -42,7 +42,7 @@ const PaymentForm = (props) => {
   };
 
   const handleImageChange = (event) => {
-    setFile(event.target.files[1]);
+    setFile(event.target.files[0]);
   };
 
   const handleName = (event) => {
@@ -55,7 +55,7 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
-  const submit = (e) => {
+  const submit = () => {
     console.log("+++", file);
 
     if (file) {
