@@ -69,7 +69,7 @@ const PaymentForm = (props) => {
       deliveryOption,
       address: deliveryOption === "delivery" ? address : "",
       paymentOption,
-      deposited: uploadedFile,
+      deposited: formData,
     };
     try {
       // Make a POST request to the backend endpoint for handling file upload
