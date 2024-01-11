@@ -59,10 +59,9 @@ const PaymentForm = (props) => {
   const submit = async () => {
     try {
       const uploadedFile = file;
-
+      console.log("------", uploadedFile);
       if (uploadedFile) {
-        // Prepare user data
-        const userData = {
+        userDataRef.current = {
           name,
           number,
           deliveryOption,
@@ -70,14 +69,9 @@ const PaymentForm = (props) => {
           paymentOption,
         };
 
-        // Create a FormData object and append the file to it
         const formData = new FormData();
-        formData.append("picture", uploadedFile);
-
-        // Append user data as JSON to the FormData
+        formData.append("picture", file);
         formData.append("userData", JSON.stringify(userData));
-
-        // Send the FormData to your backend for processing
         const response = await axios.post(
           "http://localhost:3000/payment",
           formData,
@@ -87,18 +81,13 @@ const PaymentForm = (props) => {
             },
           }
         );
-
         console.log(response.data);
-
-        // Update the Telegram button text and show it
         teleg.MainButton.text = "Submit";
         teleg.MainButton.show();
       } else {
         console.warn("No file uploaded."); // Log a warning if file is not selected
       }
-    } catch (error) {
-      console.error("Error submitting data:", error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
