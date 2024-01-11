@@ -10,7 +10,6 @@ import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import { useRef } from "react";
-import axios from "axios";
 
 const teleg = window.Telegram.WebApp;
 
@@ -56,38 +55,28 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
-  const submit = async () => {
-    try {
-      const uploadedFile = file;
-      console.log("------", uploadedFile);
-      if (uploadedFile) {
-        userDataRef.current = {
-          name,
-          number,
-          deliveryOption,
-          address: deliveryOption === "delivery" ? address : "",
-          paymentOption,
-        };
+  const submit = () => {
+    const uploadedFile = file;
+    console.log("------", uploadedFile);
+    if (uploadedFile) {
+      userDataRef.current = {
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        paymentOption,
+        deposited: uploadedFile,
+      };
 
-        const formData = new FormData();
-        formData.append("picture", file);
-        formData.append("userData", JSON.stringify(userData));
-        const response = await axios.post(
-          "http://localhost:3000/payment",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log(response.data);
-        teleg.MainButton.text = "Submit";
-        teleg.MainButton.show();
-      } else {
-        console.warn("No file uploaded."); // Log a warning if file is not selected
-      }
-    } catch (error) {}
+      console.log("++++", uploadedFile);
+
+      console.log("DATAS:", userDataRef.current);
+      // setFile(null); // Clear the file input after submitting
+      teleg.MainButton.text = "Submit";
+      teleg.MainButton.show();
+    } else {
+      console.warn("No file uploaded."); // Log a warning if file is not selected
+    }
   };
 
   useEffect(() => {
