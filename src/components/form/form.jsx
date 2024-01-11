@@ -55,24 +55,48 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
-  const submit = () => {
-    const uploadedFile = file;
+  const submit = async () => {
+    try {
+      const uploadedFile = file;
 
-    if (uploadedFile) {
-      userDataRef.current = {
-        name,
-        number,
-        deliveryOption,
-        address: deliveryOption === "delivery" ? address : "",
-        paymentOption,
-        deposited: uploadedFile,
-      };
-      console.log("DATAS:", userDataRef.current);
-      // setFile(null); // Clear the file input after submitting
-      teleg.MainButton.text = "Submit";
-      teleg.MainButton.show();
-    } else {
-      console.warn("No file uploaded."); // Log a warning if file is not selected
+      if (uploadedFile) {
+        // Prepare user data
+        const userData = {
+          name,
+          number,
+          deliveryOption,
+          address: deliveryOption === "delivery" ? address : "",
+          paymentOption,
+        };
+
+        // Create a FormData object and append the file to it
+        const formData = new FormData();
+        formData.append("picture", uploadedFile);
+
+        // Append user data as JSON to the FormData
+        formData.append("userData", JSON.stringify(userData));
+
+        // Send the FormData to your backend for processing
+        const response = await axios.post(
+          "http://localhost:3000/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log(response.data);
+
+        // Update the Telegram button text and show it
+        teleg.MainButton.text = "Submit";
+        teleg.MainButton.show();
+      } else {
+        console.warn("No file uploaded."); // Log a warning if file is not selected
+      }
+    } catch (error) {
+      console.error("Error submitting data:", error);
     }
   };
 
@@ -89,7 +113,7 @@ const PaymentForm = (props) => {
     return () => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [cartItems]);
+  }, [cartItems, userDataRef.current]);
 
   return (
     <div className="form-container">
