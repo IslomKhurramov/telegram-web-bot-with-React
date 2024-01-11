@@ -10,6 +10,7 @@ import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import { useRef } from "react";
+import axios from "axios";
 
 const teleg = window.Telegram.WebApp;
 
@@ -78,7 +79,7 @@ const PaymentForm = (props) => {
 
         // Send the FormData to your backend for processing
         const response = await axios.post(
-          "http://localhost:3000/upload",
+          "http://localhost:3000/payment",
           formData,
           {
             headers: {
