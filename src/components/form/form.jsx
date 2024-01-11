@@ -55,27 +55,41 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
-  const submit = () => {
+  const submit = async () => {
     const uploadedFile = file;
-    console.log("------", uploadedFile);
-    if (uploadedFile) {
-      userDataRef.current = {
-        name,
-        number,
-        deliveryOption,
-        address: deliveryOption === "delivery" ? address : "",
-        paymentOption,
-        deposited: uploadedFile,
-      };
+    // Create a FormData object to handle the file upload
+    const formData = new FormData();
+    formData.append("picture", uploadedFile);
 
-      console.log("++++", uploadedFile);
+    userDataRef.current = {
+      name,
+      number,
+      deliveryOption,
+      address: deliveryOption === "delivery" ? address : "",
+      paymentOption,
+      deposited: uploadedFile,
+    };
+    try {
+      // Make a POST request to the backend endpoint for handling file upload
+      const response = await fetch("http://localhost:3000/payment", {
+        method: "POST",
+        body: formData,
+      });
 
-      console.log("DATAS:", userDataRef.current);
-      // setFile(null); // Clear the file input after submitting
+      if (!response.ok) {
+        throw new Error("File upload failed");
+      }
+
+      // Handle the response from the backend as needed
+      const responseData = await response.json();
+      console.log(responseData);
+
+      // Update teleg.MainButton properties if needed
       teleg.MainButton.text = "Submit";
       teleg.MainButton.show();
-    } else {
-      console.warn("No file uploaded."); // Log a warning if file is not selected
+    } catch (error) {
+      console.error("Error during file upload:", error);
+      // Handle the error, show a message to the user, etc.
     }
   };
 
