@@ -60,6 +60,8 @@ const PaymentForm = (props) => {
     // Create a FormData object to handle the file upload
     const formData = new FormData();
     formData.append("picture", uploadedFile);
+    console.log("File:", file);
+    console.log("FormData:", formData);
 
     userDataRef.current = {
       name,
