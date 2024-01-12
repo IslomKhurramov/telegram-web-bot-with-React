@@ -57,6 +57,14 @@ const PaymentForm = (props) => {
   };
 
   const submit = async () => {
+    userDataRef.current = {
+      name,
+      number,
+      deliveryOption,
+      address: deliveryOption === "delivery" ? address : "",
+      paymentOption,
+    };
+
     try {
       let formData = new FormData();
       const uploadedFile = file;
@@ -77,14 +85,6 @@ const PaymentForm = (props) => {
       if (!response.ok) {
         throw new Error("File upload failed");
       }
-
-      userDataRef.current = {
-        name,
-        number,
-        deliveryOption,
-        address: deliveryOption === "delivery" ? address : "",
-        paymentOption,
-      };
 
       // Handle the response from the backend as needed
       const responseData = await response.data;
