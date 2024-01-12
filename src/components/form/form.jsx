@@ -10,6 +10,7 @@ import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import { useRef } from "react";
+import axios from "axios";
 
 const teleg = window.Telegram.WebApp;
 
@@ -58,29 +59,37 @@ const PaymentForm = (props) => {
   const submit = async () => {
     const uploadedFile = file;
     // Create a FormData object to handle the file upload
-    const formData = new FormData();
-    formData.append("picture", uploadedFile);
-    console.log("File:", file);
-    console.log("FormData:", formData);
 
-    userDataRef.current = {
-      name,
-      number,
-      deliveryOption,
-      address: deliveryOption === "delivery" ? address : "",
-      paymentOption,
-      deposited: formData,
-    };
+    console.log("File:", file);
+    // console.log("FormData:", formData);
+
     try {
+      let formData = new FormData();
+      formData.append("Picture", uploadedFile);
       // Make a POST request to the backend endpoint for handling file upload
-      const response = await fetch("http://localhost:3000/payment", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await axios.post(
+        "http://localhost:3000/payment",
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("File upload failed");
       }
+
+      userDataRef.current = {
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        paymentOption,
+        deposited: formData,
+      };
 
       // Handle the response from the backend as needed
       const responseData = await response.json();
@@ -107,7 +116,7 @@ const PaymentForm = (props) => {
     return () => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [cartItems]);
+  }, [cartItems, userDataRef.current]);
 
   return (
     <div className="form-container">
