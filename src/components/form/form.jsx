@@ -76,12 +76,12 @@ const PaymentForm = (props) => {
         }
       );
 
-      if (!response.data || !response.data.pictureId) {
+      if (!response.data || !response.data.picture) {
         throw new Error("File upload failed or no pictureId received");
       }
 
       // Capture the pictureId from the response
-      pictureId = response.data.pictureId;
+      pictureId = response.data.picture?._id;
 
       // Handle the response from the backend as needed
       console.log("File uploaded successfully. Picture ID:", pictureId);
