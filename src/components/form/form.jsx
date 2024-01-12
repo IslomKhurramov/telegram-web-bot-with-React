@@ -55,59 +55,46 @@ const PaymentForm = (props) => {
   const backToMainHandler = () => {
     history.push(`/`);
   };
-  const submit = async () => {
-    const uploadedFile = file;
 
+  const submit = async () => {
     try {
       let formData = new FormData();
+      const uploadedFile = file;
       formData.append("picture", uploadedFile);
-
-      const response = await axios.post(
-        "http://localhost:3000/payment",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      // Make a POST request to the backend endpoint for handling file upload
+      const response = await axios("http://localhost:3000/payment", {
+        method: "POST",
+        data: formData,
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("File upload failed");
       }
 
-      // Wait for the userData state to be updated
-      await new Promise((resolve) =>
-        setUserData((prevUserData) => {
-          userDataRef.current = {
-            name,
-            number,
-            deliveryOption,
-            address: deliveryOption === "delivery" ? address : "",
-            paymentOption,
-            deposited: formData,
-          };
-
-          // Resolve the promise after updating userData
-          resolve(prevUserData);
-        })
-      );
+      userDataRef.current = {
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        paymentOption,
+      };
 
       // Handle the response from the backend as needed
       const responseData = await response.json();
       console.log(responseData);
-
       // Update teleg.MainButton properties if needed
-      setTimeout(() => {
-        teleg.MainButton.text = "Submit";
-        teleg.MainButton.show();
-      }, 0); // Use setTimeout to ensure the Teleg library has time to process the update
+      teleg.MainButton.text = "Submit";
+      teleg.MainButton.show();
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
   };
+
   useEffect(() => {
     const onSendData = () => {
       teleg.sendData(
