@@ -57,14 +57,9 @@ const PaymentForm = (props) => {
   };
 
   const submit = async () => {
-    const uploadedFile = file;
-    // Create a FormData object to handle the file upload
-
-    console.log("File:", file);
-    // console.log("FormData:", formData);
-
     try {
       let formData = new FormData();
+      const uploadedFile = file;
       formData.append("Picture", uploadedFile);
       // Make a POST request to the backend endpoint for handling file upload
       const response = await axios.post(
@@ -78,10 +73,6 @@ const PaymentForm = (props) => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("File upload failed");
-      }
-
       userDataRef.current = {
         name,
         number,
@@ -92,8 +83,12 @@ const PaymentForm = (props) => {
       };
 
       // Handle the response from the backend as needed
-      const responseData = await response.json();
-      console.log(responseData);
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData);
+      } else {
+        throw new Error("File upload failed");
+      }
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
