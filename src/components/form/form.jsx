@@ -85,30 +85,24 @@ const PaymentForm = (props) => {
   };
 
   const submit = async () => {
-    try {
-      const pictureId = await uploadFile(file);
+    const pictureId = await uploadFile(file);
 
-      // Handle the response from the backend as needed
-      console.log("File uploaded successfully. Picture ID:", pictureId);
+    // Handle the response from the backend as needed
+    console.log("File uploaded successfully. Picture ID:", pictureId);
 
-      // Update userDataRef with the user information, including pictureId
-      userDataRef.current = {
-        name,
-        number,
-        deliveryOption,
-        address: deliveryOption === "delivery" ? address : "",
-        paymentOption,
-        pictureId,
-      };
+    // Update userDataRef with the user information, including pictureId
+    userDataRef.current = {
+      name,
+      number,
+      deliveryOption,
+      address: deliveryOption === "delivery" ? address : "",
+      paymentOption,
+      pictureId,
+    };
 
-      // Update teleg.MainButton properties if needed
-      teleg.MainButton.text = "Submit";
-      teleg.MainButton.show();
-    } catch (error) {
-      // Error handling for the entire submit function
-      console.error("Error during submission:", error);
-      // Handle the error, show a message to the user, etc.
-    }
+    // Update teleg.MainButton properties if needed
+    teleg.MainButton.text = "Submit";
+    teleg.MainButton.show();
   };
 
   useEffect(() => {
