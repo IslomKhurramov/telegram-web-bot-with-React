@@ -99,14 +99,15 @@ const PaymentForm = (props) => {
       console.log(responseData);
 
       // Update teleg.MainButton properties if needed
-      teleg.MainButton.text = "Submit";
-      teleg.MainButton.show();
+      setTimeout(() => {
+        teleg.MainButton.text = "Submit";
+        teleg.MainButton.show();
+      }, 0); // Use setTimeout to ensure the Teleg library has time to process the update
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
   };
-
   useEffect(() => {
     const onSendData = () => {
       teleg.sendData(
