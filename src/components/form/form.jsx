@@ -56,11 +56,13 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
-  const uploadFile = async (file) => {
+  const submit = async () => {
     try {
       let formData = new FormData();
-      formData.append("picture", file);
+      const uploadedFile = file;
+      formData.append("picture", uploadedFile);
 
+      // Make a POST request to the backend endpoint for handling file upload
       const response = await axios.post(
         "http://localhost:3000/payment",
         formData,
@@ -76,20 +78,15 @@ const PaymentForm = (props) => {
         throw new Error("File upload failed or no pictureId received");
       }
 
-      return response.data.pictureId;
+      // Capture the pictureId from the response
+      const pictureId = response.data.pictureId;
+
+      // Handle the response from the backend as needed
+      console.log("File uploaded successfully. Picture ID:", pictureId);
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
-      throw error; // Rethrow the error to be caught by the calling function if needed
     }
-  };
-
-  const submit = async () => {
-    const pictureId = await uploadFile(file);
-
-    // Handle the response from the backend as needed
-    console.log("File uploaded successfully. Picture ID:", pictureId);
-
     // Update userDataRef with the user information, including pictureId
     userDataRef.current = {
       name,
@@ -97,9 +94,8 @@ const PaymentForm = (props) => {
       deliveryOption,
       address: deliveryOption === "delivery" ? address : "",
       paymentOption,
-      pictureId,
+      pictureId, // Add the pictureId to the userData
     };
-
     // Update teleg.MainButton properties if needed
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
