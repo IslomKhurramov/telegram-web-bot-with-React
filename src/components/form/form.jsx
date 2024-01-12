@@ -57,6 +57,8 @@ const PaymentForm = (props) => {
   };
 
   const submit = async () => {
+    let pictureId; // Declare pictureId outside the try block
+
     try {
       let formData = new FormData();
       const uploadedFile = file;
@@ -79,7 +81,7 @@ const PaymentForm = (props) => {
       }
 
       // Capture the pictureId from the response
-      const pictureId = response.data.pictureId;
+      pictureId = response.data.pictureId;
 
       // Handle the response from the backend as needed
       console.log("File uploaded successfully. Picture ID:", pictureId);
