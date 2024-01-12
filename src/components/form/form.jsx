@@ -9,8 +9,8 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
-import axios from "axios";
 import { useRef } from "react";
+import axios from "axios";
 
 const teleg = window.Telegram.WebApp;
 
@@ -56,13 +56,11 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
-  const submit = async () => {
+  const uploadFile = async (file) => {
     try {
       let formData = new FormData();
-      const uploadedFile = file;
-      formData.append("picture", uploadedFile);
+      formData.append("picture", file);
 
-      // Make a POST request to the backend endpoint for handling file upload
       const response = await axios.post(
         "http://localhost:3000/payment",
         formData,
@@ -78,11 +76,20 @@ const PaymentForm = (props) => {
         throw new Error("File upload failed or no pictureId received");
       }
 
-      // Capture the pictureId from the response
-      const pictureId = response.data.pictureId;
+      return response.data.pictureId;
+    } catch (error) {
+      console.error("Error during file upload:", error);
+      // Handle the error, show a message to the user, etc.
+      throw error; // Rethrow the error to be caught by the calling function if needed
+    }
+  };
 
-      // Wait for userDataRef to be updated before proceeding
-      await new Promise((resolve) => setTimeout(resolve, 0));
+  const submit = async () => {
+    try {
+      const pictureId = await uploadFile(file);
+
+      // Handle the response from the backend as needed
+      console.log("File uploaded successfully. Picture ID:", pictureId);
 
       // Update userDataRef with the user information, including pictureId
       userDataRef.current = {
@@ -91,19 +98,17 @@ const PaymentForm = (props) => {
         deliveryOption,
         address: deliveryOption === "delivery" ? address : "",
         paymentOption,
-        pictureId, // Add the pictureId to the userData
+        pictureId,
       };
 
-      // Handle the response from the backend as needed
-      console.log("File uploaded successfully. Picture ID:", pictureId);
+      // Update teleg.MainButton properties if needed
+      teleg.MainButton.text = "Submit";
+      teleg.MainButton.show();
     } catch (error) {
-      console.error("Error during file upload:", error);
+      // Error handling for the entire submit function
+      console.error("Error during submission:", error);
       // Handle the error, show a message to the user, etc.
     }
-
-    // Update teleg.MainButton properties if needed
-    teleg.MainButton.text = "Submit";
-    teleg.MainButton.show();
   };
 
   useEffect(() => {
