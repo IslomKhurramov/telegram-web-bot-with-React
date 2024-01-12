@@ -81,25 +81,25 @@ const PaymentForm = (props) => {
       // Capture the pictureId from the response
       const pictureId = response.data.pictureId;
 
+      // Update userDataRef with the user information, including pictureId
+      userDataRef.current = {
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        paymentOption,
+        pictureId, // Add the pictureId to the userData
+      };
+      // Update teleg.MainButton properties if needed
+      teleg.MainButton.text = "Submit";
+      teleg.MainButton.show();
+
       // Handle the response from the backend as needed
       console.log("File uploaded successfully. Picture ID:", pictureId);
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
-
-    // Update userDataRef with the user information, including pictureId
-    userDataRef.current = {
-      name,
-      number,
-      deliveryOption,
-      address: deliveryOption === "delivery" ? address : "",
-      paymentOption,
-      pictureId, // Add the pictureId to the userData
-    };
-    // Update teleg.MainButton properties if needed
-    teleg.MainButton.text = "Submit";
-    teleg.MainButton.show();
   };
 
   useEffect(() => {
