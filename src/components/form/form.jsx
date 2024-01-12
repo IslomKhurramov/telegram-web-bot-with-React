@@ -55,50 +55,56 @@ const PaymentForm = (props) => {
   const backToMainHandler = () => {
     history.push(`/`);
   };
-
   const submit = async () => {
     const uploadedFile = file;
-    // Create a FormData object to handle the file upload
-
-    console.log("File:", file);
-    // console.log("FormData:", formData);
 
     try {
       let formData = new FormData();
-      formData.append("Picture", uploadedFile);
-      // Make a POST request to the backend endpoint for handling file upload
-      const response = await axios("http://localhost:3000/payment", {
-        method: "POST",
-        data: formData,
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      formData.append("picture", uploadedFile);
+
+      const response = await axios.post(
+        "http://localhost:3000/payment",
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("File upload failed");
       }
 
-      userDataRef.current = {
-        name,
-        number,
-        deliveryOption,
-        address: deliveryOption === "delivery" ? address : "",
-        paymentOption,
-        deposited: formData,
-      };
+      // Wait for the userData state to be updated
+      await new Promise((resolve) =>
+        setUserData((prevUserData) => {
+          userDataRef.current = {
+            name,
+            number,
+            deliveryOption,
+            address: deliveryOption === "delivery" ? address : "",
+            paymentOption,
+            deposited: formData,
+          };
+
+          // Resolve the promise after updating userData
+          resolve(prevUserData);
+        })
+      );
 
       // Handle the response from the backend as needed
       const responseData = await response.json();
       console.log(responseData);
+
+      // Update teleg.MainButton properties if needed
+      teleg.MainButton.text = "Submit";
+      teleg.MainButton.show();
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
-    // Update teleg.MainButton properties if needed
-    teleg.MainButton.text = "Submit";
-    teleg.MainButton.show();
   };
 
   useEffect(() => {
