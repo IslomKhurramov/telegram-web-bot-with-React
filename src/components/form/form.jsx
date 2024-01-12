@@ -9,8 +9,8 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
-import { useRef } from "react";
 import axios from "axios";
+import { useRef } from "react";
 
 const teleg = window.Telegram.WebApp;
 
@@ -90,9 +90,6 @@ const PaymentForm = (props) => {
         paymentOption,
         pictureId, // Add the pictureId to the userData
       };
-      // Update teleg.MainButton properties if needed
-      teleg.MainButton.text = "Submit";
-      teleg.MainButton.show();
 
       // Handle the response from the backend as needed
       console.log("File uploaded successfully. Picture ID:", pictureId);
@@ -100,8 +97,11 @@ const PaymentForm = (props) => {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
-  };
 
+    // Update teleg.MainButton properties if needed
+    teleg.MainButton.text = "Submit";
+    teleg.MainButton.show();
+  };
   useEffect(() => {
     const onSendData = () => {
       teleg.sendData(
