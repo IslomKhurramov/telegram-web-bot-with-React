@@ -57,14 +57,9 @@ const PaymentForm = (props) => {
   };
 
   const submit = async () => {
-    const uploadedFile = file;
-    // Create a FormData object to handle the file upload
-
-    console.log("File:", file);
-    // console.log("FormData:", formData);
-
     try {
       let formData = new FormData();
+      const uploadedFile = file;
       formData.append("picture", uploadedFile);
       // Make a POST request to the backend endpoint for handling file upload
       const response = await axios("http://localhost:3000/payment", {
@@ -86,7 +81,6 @@ const PaymentForm = (props) => {
         deliveryOption,
         address: deliveryOption === "delivery" ? address : "",
         paymentOption,
-        deposited: formData,
       };
 
       // Handle the response from the backend as needed
