@@ -81,6 +81,9 @@ const PaymentForm = (props) => {
       // Capture the pictureId from the response
       const pictureId = response.data.pictureId;
 
+      // Wait for userDataRef to be updated before proceeding
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
       // Update userDataRef with the user information, including pictureId
       userDataRef.current = {
         name,
@@ -102,6 +105,7 @@ const PaymentForm = (props) => {
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
   };
+
   useEffect(() => {
     const onSendData = () => {
       teleg.sendData(
