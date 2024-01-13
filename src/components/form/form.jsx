@@ -58,54 +58,62 @@ const PaymentForm = (props) => {
 
   const submit = async () => {
     try {
-      if (file) {
-        formData.append("picture", file);
-        const response = await axios.post(
-          "http://localhost:3000/payment",
-          formData,
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        if (response.data && response.data.pictureId) {
-          setPictureId(response.data.pictureId);
-          console.log(
-            "File uploaded successfully. Picture ID:",
-            response.data.pictureId
-          );
-        } else {
-          throw new Error("File upload failed or no pictureId received");
-        }
+      if (!file) {
+        console.error("No file selected for upload.");
+        // Optionally, provide user feedback (e.g., show an alert)
+        return;
       }
 
-      userDataRef.current = {
-        name,
-        number,
-        deliveryOption,
-        address,
-        paymentOption,
-        pictureId,
-      };
-
-      console.log("userDataRef", userDataRef.current);
-
-      teleg.MainButton.text = "Submit";
-      teleg.MainButton.show();
-
-      teleg.sendData(
-        JSON.stringify({
-          cartItems: props.cartItems,
-          userData: userDataRef.current,
-        }),
-        [props.cartItems, userDataRef.current]
+      formData.append("picture", file);
+      const response = await axios.post(
+        "http://localhost:3000/payment",
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
+
+      if (response.data && response.data.pictureId) {
+        setPictureId(response.data.pictureId);
+        console.log(
+          "File uploaded successfully. Picture ID:",
+          response.data.pictureId
+        );
+      } else {
+        throw new Error("File upload failed or no pictureId received");
+      }
     } catch (error) {
       console.error("Error during file upload:", error);
+      // Optionally, provide user feedback (e.g., show an alert)
     }
+
+    // Update userDataRef with the user information
+    userDataRef.current = {
+      name,
+      number,
+      deliveryOption,
+      address,
+      paymentOption,
+      pictureId,
+    };
+
+    console.log("userDataRef", userDataRef.current);
+
+    // Update teleg.MainButton properties
+    teleg.MainButton.text = "Submit";
+    teleg.MainButton.show();
+
+    // Send data to Telegram
+    teleg.sendData(
+      JSON.stringify({
+        cartItems: props.cartItems,
+        userData: userDataRef.current,
+      }),
+      [props.cartItems, userDataRef.current]
+    );
   };
 
   useEffect(() => {
