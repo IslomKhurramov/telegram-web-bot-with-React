@@ -109,9 +109,12 @@ const PaymentForm = (props) => {
       teleg.sendData(
         JSON.stringify({
           cartItems,
-          userData: { ...userDataRef.current, pictureId },
+          userData: {
+            ...userDataRef.current,
+            pictureId: userDataRef.current.pictureId,
+          },
         }),
-        [cartItems, userDataRef.current, pictureId]
+        [cartItems, userDataRef.current, userDataRef.current.pictureId]
       );
     };
 
