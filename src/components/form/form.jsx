@@ -99,7 +99,7 @@ const PaymentForm = (props) => {
       paymentOption,
       pictureId, // Add the pictureId to the userData
     };
-
+    console.log("userdataref", userDataRef.current);
     // Update teleg.MainButton properties if needed
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
@@ -143,7 +143,6 @@ const PaymentForm = (props) => {
         );
       } catch (error) {
         console.error("Error during file upload:", error);
-        // Handle the error, show a message to the user, etc.
       }
     };
 
