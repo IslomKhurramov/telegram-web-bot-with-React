@@ -24,6 +24,7 @@ const PaymentForm = (props) => {
   const [address, setAddress] = useState("");
   const { onCheckout, setUserData, userData, cartItems } = props;
   const [pictureId, setPictureId] = useState(null);
+  const [formData, setFormData] = useState(new FormData());
 
   const userDataRef = useRef({});
 
@@ -59,11 +60,9 @@ const PaymentForm = (props) => {
 
   const submit = async () => {
     try {
-      let formData = new FormData();
       const uploadedFile = file;
       formData.append("picture", uploadedFile);
 
-      // Make a POST request to the backend endpoint for handling file upload
       const response = await axios.post(
         "http://localhost:3000/payment",
         formData,
@@ -79,70 +78,35 @@ const PaymentForm = (props) => {
         throw new Error("File upload failed or no pictureId received");
       }
 
-      // Capture the pictureId from the response
       const uploadedPictureId = response.data.pictureId;
-      setPictureId(uploadedPictureId); // Update pictureId using the state setter
 
-      // Handle the response from the backend as needed
-      console.log("File uploaded successfully. Picture ID:", uploadedPictureId);
+      userDataRef.current = {
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        paymentOption,
+        pictureId: uploadedPictureId,
+      };
+
+      teleg.MainButton.text = "Submit";
+      teleg.MainButton.show();
+
+      teleg.sendData(
+        JSON.stringify({ cartItems, userData: userDataRef.current }),
+        [cartItems, userDataRef.current]
+      );
     } catch (error) {
       console.error("Error during file upload:", error);
-      // Handle the error, show a message to the user, etc.
     }
-
-    // Update userDataRef with the user information, including pictureId
-    userDataRef.current = {
-      name,
-      number,
-      deliveryOption,
-      address: deliveryOption === "delivery" ? address : "",
-      paymentOption,
-      pictureId, // Add the pictureId to the userData
-    };
-    console.log("userdataref", userDataRef.current);
-    // Update teleg.MainButton properties if needed
-    teleg.MainButton.text = "Submit";
-    teleg.MainButton.show();
   };
 
   useEffect(() => {
     const onSendData = async () => {
       try {
-        const response = await axios.post(
-          "http://localhost:3000/payment",
-          formData,
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        if (!response.data || !response.data.pictureId) {
-          throw new Error("File upload failed or no pictureId received");
-        }
-
-        const uploadedPictureId = response.data.pictureId;
-
-        userDataRef.current = {
-          name,
-          number,
-          deliveryOption,
-          address: deliveryOption === "delivery" ? address : "",
-          paymentOption,
-          pictureId: uploadedPictureId, // Update pictureId with the received value
-        };
-
-        teleg.MainButton.text = "Submit";
-        teleg.MainButton.show();
-
-        teleg.sendData(
-          JSON.stringify({ cartItems, userData: userDataRef.current }),
-          [cartItems, userDataRef.current]
-        );
+        await submit();
       } catch (error) {
-        console.error("Error during file upload:", error);
+        console.error("Error during onSendData:", error);
       }
     };
 
@@ -159,9 +123,8 @@ const PaymentForm = (props) => {
     deliveryOption,
     address,
     paymentOption,
-    formData,
+    formData, // Include formData in the dependencies array
   ]);
-
   return (
     <div className="form-container">
       <div>
