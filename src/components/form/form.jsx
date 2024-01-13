@@ -80,11 +80,11 @@ const PaymentForm = (props) => {
       }
 
       // Capture the pictureId from the response
-      pictureId = response.data.pictureId;
-      setPictureId(pictureId);
+      const uploadedPictureId = response.data.pictureId;
+      setPictureId(uploadedPictureId); // Update pictureId using the state setter
 
       // Handle the response from the backend as needed
-      console.log("File uploaded successfully. Picture ID:", pictureId);
+      console.log("File uploaded successfully. Picture ID:", uploadedPictureId);
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
@@ -99,23 +99,52 @@ const PaymentForm = (props) => {
       paymentOption,
       pictureId, // Add the pictureId to the userData
     };
+
     // Update teleg.MainButton properties if needed
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
   };
 
   useEffect(() => {
-    const onSendData = () => {
-      teleg.sendData(
-        JSON.stringify({
-          cartItems,
-          userData: {
-            ...userDataRef.current,
-            pictureId: userDataRef.current.pictureId,
-          },
-        }),
-        [cartItems, userDataRef.current, userDataRef.current.pictureId]
-      );
+    const onSendData = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/payment",
+          formData,
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (!response.data || !response.data.pictureId) {
+          throw new Error("File upload failed or no pictureId received");
+        }
+
+        const uploadedPictureId = response.data.pictureId;
+
+        userDataRef.current = {
+          name,
+          number,
+          deliveryOption,
+          address: deliveryOption === "delivery" ? address : "",
+          paymentOption,
+          pictureId: uploadedPictureId, // Update pictureId with the received value
+        };
+
+        teleg.MainButton.text = "Submit";
+        teleg.MainButton.show();
+
+        teleg.sendData(
+          JSON.stringify({ cartItems, userData: userDataRef.current }),
+          [cartItems, userDataRef.current]
+        );
+      } catch (error) {
+        console.error("Error during file upload:", error);
+        // Handle the error, show a message to the user, etc.
+      }
     };
 
     teleg.onEvent("mainButtonClicked", onSendData);
@@ -123,7 +152,16 @@ const PaymentForm = (props) => {
     return () => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [cartItems, userDataRef.current, pictureId]);
+  }, [
+    cartItems,
+    userDataRef.current,
+    name,
+    number,
+    deliveryOption,
+    address,
+    paymentOption,
+    formData,
+  ]);
 
   return (
     <div className="form-container">
