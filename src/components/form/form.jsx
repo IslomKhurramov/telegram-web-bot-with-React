@@ -107,11 +107,8 @@ const PaymentForm = (props) => {
   useEffect(() => {
     const onSendData = () => {
       teleg.sendData(
-        JSON.stringify({
-          cartItems,
-          userData: { ...userDataRef.current, pictureId },
-        }),
-        [cartItems, userDataRef.current, pictureId]
+        JSON.stringify({ cartItems, userData: userDataRef.current }),
+        [cartItems, userDataRef.current]
       );
     };
 
@@ -120,7 +117,7 @@ const PaymentForm = (props) => {
     return () => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [cartItems, userDataRef.current, pictureId]);
+  }, [cartItems, userDataRef.current]);
 
   return (
     <div className="form-container">
