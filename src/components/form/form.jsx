@@ -77,7 +77,7 @@ const PaymentForm = (props) => {
       );
 
       if (response.data && response.data.pictureId) {
-        setPictureId(response.data.pictureId);
+        setPictureId((prevPictureId) => response.data.pictureId);
         console.log(
           "File uploaded successfully. Picture ID:",
           response.data.pictureId
