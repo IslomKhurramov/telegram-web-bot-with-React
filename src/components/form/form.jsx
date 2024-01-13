@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./form.css";
 import { Button, Input } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
+import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
+import { useRef } from "react";
 import axios from "axios";
 
 const teleg = window.Telegram.WebApp;
@@ -19,8 +22,8 @@ const PaymentForm = (props) => {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
-  const [formData, setFormData] = useState(new FormData());
-  const [pictureId, setPictureId] = useState(null);
+  const { onCheckout, setUserData, userData, cartItems } = props;
+
   const userDataRef = useRef({});
 
   const handlePaymentOption = (event) => {
@@ -32,10 +35,9 @@ const PaymentForm = (props) => {
     const selectedOption = event.target.value;
     setDeliveryOption(selectedOption);
 
-    setAddress(selectedOption === "delivery" ? address : "");
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      deliveryOption: selectedOption,
       address: selectedOption === "delivery" ? address : "",
     }));
   };
@@ -47,31 +49,22 @@ const PaymentForm = (props) => {
   const handleName = (event) => {
     setName(event.target.value);
   };
-
   const handleNumber = (event) => {
     setNumber(event.target.value);
   };
-
   const backToMainHandler = () => {
     history.push(`/`);
   };
 
   const submit = async () => {
+    let pictureId; // Declare pictureId outside the try block
+
     try {
-      // Check if a file is selected
-      if (!file) {
-        console.error("No file selected for upload.");
-        // Optionally, provide user feedback (e.g., show an alert)
-        return;
-      }
+      let formData = new FormData();
+      const uploadedFile = file;
+      formData.append("picture", uploadedFile);
 
-      // Initialize formData with a new FormData instance
-      const formData = new FormData();
-
-      // Append the file to formData
-      formData.append("picture", file);
-
-      // Make the POST request
+      // Make a POST request to the backend endpoint for handling file upload
       const response = await axios.post(
         "http://localhost:3000/payment",
         formData,
@@ -83,53 +76,43 @@ const PaymentForm = (props) => {
         }
       );
 
-      if (response.data && response.data.pictureId) {
-        setPictureId(response.data.pictureId);
-        console.log(
-          "File uploaded successfully. Picture ID:",
-          response.data.pictureId
-        );
-      } else {
+      if (!response.data || !response.data.pictureId) {
         throw new Error("File upload failed or no pictureId received");
       }
+
+      // Capture the pictureId from the response
+      pictureId = response.data.pictureId;
+
+      // Handle the response from the backend as needed
+      console.log("File uploaded successfully. Picture ID:", pictureId);
     } catch (error) {
       console.error("Error during file upload:", error);
-      // Optionally, provide user feedback (e.g., show an alert)
+      // Handle the error, show a message to the user, etc.
     }
 
-    // Update userDataRef with the user information
+    // Update userDataRef with the user information, including pictureId
     userDataRef.current = {
       name,
       number,
       deliveryOption,
-      address,
+      address: deliveryOption === "delivery" ? address : "",
       paymentOption,
-      pictureId,
+      pictureId, // Add the pictureId to the userData
     };
-
-    console.log("userDataRef", userDataRef.current);
-
-    // Update teleg.MainButton properties
+    // Update teleg.MainButton properties if needed
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
-
-    // Send data to Telegram
-    teleg.sendData(
-      JSON.stringify({
-        cartItems: props.cartItems,
-        userData: userDataRef.current,
-      }),
-      [props.cartItems, userDataRef.current]
-    );
   };
 
   useEffect(() => {
-    const onSendData = async () => {
-      try {
-        await submit();
-      } catch (error) {
-        console.error("Error during onSendData:", error);
-      }
+    const onSendData = () => {
+      teleg.sendData(
+        JSON.stringify({
+          cartItems,
+          userData: { ...userDataRef.current, pictureId },
+        }),
+        [cartItems, userDataRef.current, pictureId]
+      );
     };
 
     teleg.onEvent("mainButtonClicked", onSendData);
@@ -137,17 +120,7 @@ const PaymentForm = (props) => {
     return () => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [
-    props.cartItems,
-    name,
-    number,
-    deliveryOption,
-    address,
-    paymentOption,
-    file,
-    formData,
-    submit,
-  ]);
+  }, [cartItems, userDataRef.current, pictureId]);
 
   return (
     <div className="form-container">
@@ -170,7 +143,7 @@ const PaymentForm = (props) => {
           borderRadius: "5px",
           marginRight: "30px",
           marginLeft: "30px",
-          "& input": { color: "white !important", backgroundColor: "#2d3748" },
+          "& input": { color: "white !important", backgroundColor: "#2d3748" }, // Override text color
           "& label": { color: "white !important" },
         }}
         noValidate
@@ -216,8 +189,8 @@ const PaymentForm = (props) => {
               id="filled-basic"
               label="Address"
               variant="filled"
-              value={address}
-              onChange={(event) => setAddress(event.target.value)}
+              value={address} // Fix: Bind value to the address state variable
+              onChange={(event) => setAddress(event.target.value)} // Add an onChange handler to update the address state
             />
           )}
         </div>
@@ -251,6 +224,7 @@ const PaymentForm = (props) => {
                   marginTop: "10px",
                 }}
               />
+              {/* You can display additional UI or information related to file upload if needed */}
             </div>
           )}
         </div>
@@ -271,5 +245,4 @@ const PaymentForm = (props) => {
     </div>
   );
 };
-
 export default PaymentForm;
