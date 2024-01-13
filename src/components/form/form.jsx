@@ -23,6 +23,7 @@ const PaymentForm = (props) => {
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
   const { onCheckout, setUserData, userData, cartItems } = props;
+  const [pictureId, setPictureId] = useState(null);
 
   const userDataRef = useRef({});
 
@@ -57,8 +58,6 @@ const PaymentForm = (props) => {
   };
 
   const submit = async () => {
-    let pictureId; // Declare pictureId outside the try block
-
     try {
       let formData = new FormData();
       const uploadedFile = file;
@@ -82,6 +81,7 @@ const PaymentForm = (props) => {
 
       // Capture the pictureId from the response
       pictureId = response.data.pictureId;
+      setPictureId(pictureId);
 
       // Handle the response from the backend as needed
       console.log("File uploaded successfully. Picture ID:", pictureId);
@@ -107,8 +107,11 @@ const PaymentForm = (props) => {
   useEffect(() => {
     const onSendData = () => {
       teleg.sendData(
-        JSON.stringify({ cartItems, userData: userDataRef.current }),
-        [cartItems, userDataRef.current]
+        JSON.stringify({
+          cartItems,
+          userData: { ...userDataRef.current, pictureId },
+        }),
+        [cartItems, userDataRef.current, pictureId]
       );
     };
 
@@ -117,7 +120,7 @@ const PaymentForm = (props) => {
     return () => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [cartItems, userDataRef.current]);
+  }, [cartItems, userDataRef.current, pictureId]);
 
   return (
     <div className="form-container">
