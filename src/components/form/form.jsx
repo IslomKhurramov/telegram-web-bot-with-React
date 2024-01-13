@@ -60,6 +60,7 @@ const PaymentForm = (props) => {
 
   const submit = async () => {
     try {
+      // Use the formData state
       const uploadedFile = file;
       formData.append("picture", uploadedFile);
 
