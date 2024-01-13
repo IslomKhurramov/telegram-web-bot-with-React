@@ -58,13 +58,20 @@ const PaymentForm = (props) => {
 
   const submit = async () => {
     try {
+      // Check if a file is selected
       if (!file) {
         console.error("No file selected for upload.");
         // Optionally, provide user feedback (e.g., show an alert)
         return;
       }
 
+      // Initialize formData with a new FormData instance
+      const formData = new FormData();
+
+      // Append the file to formData
       formData.append("picture", file);
+
+      // Make the POST request
       const response = await axios.post(
         "http://localhost:3000/payment",
         formData,
@@ -77,7 +84,7 @@ const PaymentForm = (props) => {
       );
 
       if (response.data && response.data.pictureId) {
-        setPictureId((prevPictureId) => response.data.pictureId);
+        setPictureId(response.data.pictureId);
         console.log(
           "File uploaded successfully. Picture ID:",
           response.data.pictureId
