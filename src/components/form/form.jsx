@@ -98,6 +98,10 @@ const PaymentForm = (props) => {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
+
+    // Update teleg.MainButton properties if needed
+    teleg.MainButton.text = "Submit";
+    teleg.MainButton.show();
   };
 
   const handlePictureIdUpdate = (updatedPictureId) => {
@@ -110,10 +114,6 @@ const PaymentForm = (props) => {
       paymentOption,
       pictureId: updatedPictureId, // Use the updated pictureId
     };
-
-    // Update teleg.MainButton properties if needed
-    teleg.MainButton.text = "Submit";
-    teleg.MainButton.show();
   };
 
   useEffect(() => {
