@@ -58,8 +58,6 @@ const PaymentForm = (props) => {
   };
 
   const submit = async () => {
-    let pictureId; // Declare pictureId outside the try block
-
     try {
       let formData = new FormData();
       const uploadedFile = file;
