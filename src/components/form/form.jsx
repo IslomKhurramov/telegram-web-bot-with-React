@@ -11,6 +11,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import { useRef } from "react";
 import axios from "axios";
+import assert from "assert";
 
 const teleg = window.Telegram.WebApp;
 
@@ -23,8 +24,7 @@ const PaymentForm = (props) => {
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
   const { onCheckout, setUserData, userData, cartItems } = props;
-  const [pictureId, setPictureId] = useState(null);
-
+  const [picture, setPicture] = useState({ picture: "" });
   const userDataRef = useRef({});
 
   const handlePaymentOption = (event) => {
@@ -43,8 +43,20 @@ const PaymentForm = (props) => {
     }));
   };
 
-  const handleImageChange = (event) => {
-    setFile(event.target.files[0]);
+  const handleImageChange = (e) => {
+    try {
+      const file = e.target.files[0];
+
+      const fileType = file["type"],
+        validTypes = ["image/jpg", "image/png", "image/jpeg"];
+      assert.ok(validTypes.includes(fileType) && file, "error image type");
+
+      picture.picture = file;
+      setPicture({ ...picture });
+      setFile(URL.createObjectURL(file));
+    } catch (err) {
+      console.log("ERROR:: handleImagePreviewer", err);
+    }
   };
 
   const handleName = (event) => {
@@ -57,42 +69,24 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
-  useEffect(() => {
-    console.log("Updated pictureId:", pictureId);
-  }, [pictureId]);
-
   const submit = async () => {
     try {
       let formData = new FormData();
-      const uploadedFile = file;
-      formData.append("picture", uploadedFile);
+      formData.append("picture", picture);
 
       // Make a POST request to the backend endpoint for handling file upload
-      const response = await axios.post(
-        "http://localhost:3000/payment",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      if (!response.data || !response.data.pictureId) {
-        throw new Error("File upload failed or no pictureId received");
-      }
-
-      // Capture the pictureId from the response
-      setPictureId(response.data.pictureId);
-
-      // Handle the response from the backend as needed
-      console.log(
-        "File uploaded successfully. Picture ID:",
-        response.data.pictureId
-      );
+      const response = await axios.post("http://localhost:3000/payment", {
+        method: "POST",
+        data: formData,
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      assert.ok(response, "error on response data");
     } catch (error) {
       console.error("Error during file upload:", error);
+      throw error;
       // Handle the error, show a message to the user, etc.
     }
 
@@ -103,7 +97,6 @@ const PaymentForm = (props) => {
       deliveryOption,
       address: deliveryOption === "delivery" ? address : "",
       paymentOption,
-      pictureId,
     };
 
     // Update teleg.MainButton properties if needed
@@ -116,9 +109,9 @@ const PaymentForm = (props) => {
       teleg.sendData(
         JSON.stringify({
           cartItems,
-          userData: { ...userDataRef.current, pictureId },
+          userData: { ...userDataRef.current },
         }),
-        [cartItems, userDataRef.current, pictureId]
+        [cartItems, userDataRef.current]
       );
     };
 
@@ -127,7 +120,7 @@ const PaymentForm = (props) => {
     return () => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [cartItems, userDataRef.current, pictureId]);
+  }, [cartItems, userDataRef.current]);
 
   return (
     <div className="form-container">
