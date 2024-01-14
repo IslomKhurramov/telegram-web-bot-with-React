@@ -80,8 +80,8 @@ const PaymentForm = (props) => {
       }
 
       // Capture the pictureId from the response
-      pictureId = response.data.pictureId;
-      setPictureId(pictureId);
+
+      setPictureId(response.data.pictureId);
 
       // Handle the response from the backend as needed
       console.log("File uploaded successfully. Picture ID:", pictureId);
