@@ -19,7 +19,6 @@ const PaymentForm = (props) => {
   const history = useHistory();
   const [deliveryOption, setDeliveryOption] = useState("");
   const [paymentOption, setPaymentOption] = useState("");
-  const [file, setFile] = useState(null);
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
@@ -52,8 +51,6 @@ const PaymentForm = (props) => {
       assert.ok(validTypes.includes(fileType) && file, "error image type");
 
       picture.picture = file;
-      setPicture({ ...picture });
-      setFile(URL.createObjectURL(file));
     } catch (err) {
       console.log("ERROR:: handleImagePreviewer", err);
     }
@@ -75,14 +72,16 @@ const PaymentForm = (props) => {
       formData.append("picture", picture);
 
       // Make a POST request to the backend endpoint for handling file upload
-      const response = await axios.post("http://localhost:3000/payment", {
-        method: "POST",
-        data: formData,
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:3000/payment",
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       assert.ok(response, "error on response data");
     } catch (error) {
       console.error("Error during file upload:", error);
