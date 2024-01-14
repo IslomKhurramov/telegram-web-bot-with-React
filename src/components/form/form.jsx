@@ -82,15 +82,10 @@ const PaymentForm = (props) => {
       if (!response.data || !response.data.pictureId) {
         throw new Error("File upload failed or no pictureId received");
       }
-
-      // Capture the pictureId from the response
-      setPictureId(response.data.pictureId);
-
-      // Handle the response from the backend as needed
-      console.log(
-        "File uploaded successfully. Picture ID:",
-        response.data.pictureId
-      );
+      setPictureId((prevPictureId) => {
+        console.log("Previous Picture ID:", prevPictureId);
+        return response.data.pictureId;
+      });
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
