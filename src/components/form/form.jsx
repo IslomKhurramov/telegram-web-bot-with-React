@@ -120,7 +120,7 @@ const PaymentForm = (props) => {
     return () => {
       teleg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [cartItems, userDataRef.current]);
+  }, [cartItems, userDataRef.current, pictureId]);
 
   return (
     <div className="form-container">
