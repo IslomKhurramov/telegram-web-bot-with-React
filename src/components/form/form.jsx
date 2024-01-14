@@ -57,6 +57,10 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
+  useEffect(() => {
+    console.log("Updated pictureId:", pictureId);
+  }, [pictureId]);
+
   const submit = async () => {
     try {
       let formData = new FormData();
@@ -80,11 +84,13 @@ const PaymentForm = (props) => {
       }
 
       // Capture the pictureId from the response
-
       setPictureId(response.data.pictureId);
 
       // Handle the response from the backend as needed
-      console.log("File uploaded successfully. Picture ID:", pictureId);
+      console.log(
+        "File uploaded successfully. Picture ID:",
+        response.data.pictureId
+      );
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
@@ -97,18 +103,13 @@ const PaymentForm = (props) => {
       deliveryOption,
       address: deliveryOption === "delivery" ? address : "",
       paymentOption,
-      pictureId, // Add the pictureId to the userData
+      pictureId,
     };
 
-    console.log("picture idd:", pictureId);
     // Update teleg.MainButton properties if needed
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
   };
-
-  useEffect(() => {
-    console.log("Updated pictureId:", pictureId);
-  }, [pictureId]);
 
   useEffect(() => {
     const onSendData = () => {
