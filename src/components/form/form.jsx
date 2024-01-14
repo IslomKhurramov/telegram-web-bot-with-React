@@ -57,10 +57,6 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
-  useEffect(() => {
-    console.log("Updated pictureId:", pictureId);
-  }, [pictureId]);
-
   const submit = async () => {
     try {
       let formData = new FormData();
@@ -85,36 +81,34 @@ const PaymentForm = (props) => {
 
       // Capture the pictureId from the response
       setPictureId(response.data.pictureId);
-
-      // Handle the response from the backend as needed
-      console.log(
-        "File uploaded successfully. Picture ID:",
-        response.data.pictureId
-      );
-
-      // Call a separate function to handle logic that depends on pictureId
-      handlePictureIdUpdate(response.data.pictureId);
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
-
-    // Update teleg.MainButton properties if needed
-    teleg.MainButton.text = "Submit";
-    teleg.MainButton.show();
   };
 
-  const handlePictureIdUpdate = (updatedPictureId) => {
-    // Update userDataRef with the user information, including updated pictureId
-    userDataRef.current = {
-      name,
-      number,
-      deliveryOption,
-      address: deliveryOption === "delivery" ? address : "",
-      paymentOption,
-      pictureId: updatedPictureId, // Use the updated pictureId
+  // This useEffect hook will be triggered whenever pictureId changes
+  useEffect(() => {
+    // Define a function to handle logic that depends on pictureId
+    const handlePictureIdUpdate = (updatedPictureId) => {
+      // Update userDataRef with the user information, including updated pictureId
+      userDataRef.current = {
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        paymentOption,
+        pictureId: updatedPictureId, // Use the updated pictureId
+      };
+
+      // Update teleg.MainButton properties if needed
+      teleg.MainButton.text = "Submit";
+      teleg.MainButton.show();
     };
-  };
+
+    // Call the function with the current pictureId
+    handlePictureIdUpdate(pictureId);
+  }, [pictureId]); // Th
 
   useEffect(() => {
     const onSendData = () => {
