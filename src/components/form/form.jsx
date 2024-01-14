@@ -57,6 +57,10 @@ const PaymentForm = (props) => {
     history.push(`/`);
   };
 
+  useEffect(() => {
+    console.log("Updated pictureId:", pictureId);
+  }, [pictureId]);
+
   const submit = async () => {
     try {
       let formData = new FormData();
@@ -78,37 +82,29 @@ const PaymentForm = (props) => {
       if (!response.data || !response.data.pictureId) {
         throw new Error("File upload failed or no pictureId received");
       }
-
-      // Capture the pictureId from the response
-      setPictureId(response.data.pictureId);
+      setPictureId((prevPictureId) => {
+        console.log("Previous Picture ID:", prevPictureId);
+        return response.data.pictureId;
+      });
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
-  };
 
-  // This useEffect hook will be triggered whenever pictureId changes
-  useEffect(() => {
-    // Define a function to handle logic that depends on pictureId
-    const handlePictureIdUpdate = (updatedPictureId) => {
-      // Update userDataRef with the user information, including updated pictureId
-      userDataRef.current = {
-        name,
-        number,
-        deliveryOption,
-        address: deliveryOption === "delivery" ? address : "",
-        paymentOption,
-        pictureId: updatedPictureId, // Use the updated pictureId
-      };
-
-      // Update teleg.MainButton properties if needed
-      teleg.MainButton.text = "Submit";
-      teleg.MainButton.show();
+    // Update userDataRef with the user information, including pictureId
+    userDataRef.current = {
+      name,
+      number,
+      deliveryOption,
+      address: deliveryOption === "delivery" ? address : "",
+      paymentOption,
+      pictureId,
     };
 
-    // Call the function with the current pictureId
-    handlePictureIdUpdate(pictureId);
-  }, [pictureId]); // Th
+    // Update teleg.MainButton properties if needed
+    teleg.MainButton.text = "Submit";
+    teleg.MainButton.show();
+  };
 
   useEffect(() => {
     const onSendData = () => {
