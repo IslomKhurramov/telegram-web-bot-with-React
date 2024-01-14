@@ -82,23 +82,33 @@ const PaymentForm = (props) => {
       if (!response.data || !response.data.pictureId) {
         throw new Error("File upload failed or no pictureId received");
       }
-      setPictureId((prevPictureId) => {
-        console.log("Previous Picture ID:", prevPictureId);
-        return response.data.pictureId;
-      });
+
+      // Capture the pictureId from the response
+      setPictureId(response.data.pictureId);
+
+      // Handle the response from the backend as needed
+      console.log(
+        "File uploaded successfully. Picture ID:",
+        response.data.pictureId
+      );
+
+      // Call a separate function to handle logic that depends on pictureId
+      handlePictureIdUpdate(response.data.pictureId);
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
+  };
 
-    // Update userDataRef with the user information, including pictureId
+  const handlePictureIdUpdate = (updatedPictureId) => {
+    // Update userDataRef with the user information, including updated pictureId
     userDataRef.current = {
       name,
       number,
       deliveryOption,
       address: deliveryOption === "delivery" ? address : "",
       paymentOption,
-      pictureId,
+      pictureId: updatedPictureId, // Use the updated pictureId
     };
 
     // Update teleg.MainButton properties if needed
