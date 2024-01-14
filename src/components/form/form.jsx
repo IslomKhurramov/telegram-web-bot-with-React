@@ -46,11 +46,14 @@ const PaymentForm = (props) => {
     try {
       const file = e.target.files[0];
 
-      const fileType = file["type"],
-        validTypes = ["image/jpg", "image/png", "image/jpeg"];
+      const fileType = file["type"];
+      const validTypes = ["image/jpg", "image/png", "image/jpeg"];
       assert.ok(validTypes.includes(fileType) && file, "error image type");
 
-      picture.picture = file;
+      setPicture((prevPicture) => ({
+        ...prevPicture,
+        picture: file,
+      }));
     } catch (err) {
       console.log("ERROR:: handleImagePreviewer", err);
     }
