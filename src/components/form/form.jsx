@@ -99,10 +99,16 @@ const PaymentForm = (props) => {
       paymentOption,
       pictureId, // Add the pictureId to the userData
     };
+
+    console.log("picture idd:", pictureId);
     // Update teleg.MainButton properties if needed
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
   };
+
+  useEffect(() => {
+    console.log("Updated pictureId:", pictureId);
+  }, [pictureId]);
 
   useEffect(() => {
     const onSendData = () => {
