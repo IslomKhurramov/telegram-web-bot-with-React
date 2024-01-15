@@ -84,33 +84,34 @@ const PaymentForm = (props) => {
       }
 
       // Fetch the picture data from the server using a separate route
-      axios
-        .get(`http://localhost:3000/pictures/${response.data.pictureId}`)
-        .then((pictureResponse) => {
-          const pictureData = pictureResponse.data;
-          // Set the picture._id in the state
-          setPictureId((prevPictureId) => {
-            console.log("Previous Picture ID:", prevPictureId);
-            return pictureData._id;
-          });
+      const pictureResponse = await axios.get(
+        `http://localhost:3000/pictures/${response.data.pictureId}`
+      );
 
-          // Update userDataRef with the user information, including pictureId
-          userDataRef.current = {
-            name,
-            number,
-            deliveryOption,
-            address: deliveryOption === "delivery" ? address : "",
-            paymentOption,
-            pictureId: pictureData._id,
-          };
+      const pictureData = pictureResponse.data;
 
-          // Update teleg.MainButton properties if needed
-          teleg.MainButton.text = "Submit";
-          teleg.MainButton.show();
-        });
+      // Set the picture._id in the state
+      setPictureId((prevPictureId) => {
+        console.log("Previous Picture ID:", prevPictureId);
+        return pictureData._id;
+      });
+
+      // Update userDataRef with the user information, including pictureId
+      userDataRef.current = {
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        paymentOption,
+        pictureId: pictureData._id,
+      };
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
+    } finally {
+      // Update teleg.MainButton properties outside the try-catch block
+      teleg.MainButton.text = "Submit";
+      teleg.MainButton.show();
     }
   };
 
