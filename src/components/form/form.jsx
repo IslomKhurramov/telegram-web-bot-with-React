@@ -23,7 +23,7 @@ const PaymentForm = (props) => {
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
   const { onCheckout, setUserData, userData, cartItems } = props;
-  const [pictureId, setPictureId] = useState(null);
+  const [pictureId, setPictureId] = useState("");
 
   const userDataRef = useRef({});
 
@@ -82,28 +82,39 @@ const PaymentForm = (props) => {
       if (!response.data || !response.data.pictureId) {
         throw new Error("File upload failed or no pictureId received");
       }
+
+      const pictureIdFromServer = response.data.pictureId;
+
+      // Fetch the picture._id from the database using the pictureId
+      const picture = await Picture.findOne({ _id: pictureIdFromServer });
+
+      if (!picture) {
+        throw new Error("Picture not found in the database");
+      }
+
+      // Set the picture._id in the state
       setPictureId((prevPictureId) => {
         console.log("Previous Picture ID:", prevPictureId);
-        return response.data.pictureId;
+        return picture._id;
       });
+
+      // Update userDataRef with the user information, including pictureId
+      userDataRef.current = {
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        paymentOption,
+        pictureId: picture._id, // Use the picture._id instead of the response.data.pictureId
+      };
+
+      // Update teleg.MainButton properties if needed
+      teleg.MainButton.text = "Submit";
+      await teleg.MainButton.show();
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
-
-    // Update userDataRef with the user information, including pictureId
-    userDataRef.current = {
-      name,
-      number,
-      deliveryOption,
-      address: deliveryOption === "delivery" ? address : "",
-      paymentOption,
-      pictureId,
-    };
-
-    // Update teleg.MainButton properties if needed
-    teleg.MainButton.text = "Submit";
-    teleg.MainButton.show();
   };
 
   useEffect(() => {
