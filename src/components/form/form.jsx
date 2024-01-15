@@ -82,37 +82,28 @@ const PaymentForm = (props) => {
       if (!response.data || !response.data.pictureId) {
         throw new Error("File upload failed or no pictureId received");
       }
-
-      // Fetch the picture data from the server using a separate route
-      const pictureResponse = await axios.get(
-        `http://localhost:3000/pictures/${response.data.pictureId}`
-      );
-
-      const pictureData = pictureResponse.data;
-
-      // Set the picture._id in the state
       setPictureId((prevPictureId) => {
         console.log("Previous Picture ID:", prevPictureId);
-        return pictureData._id;
+        return response.data.pictureId;
       });
-
-      // Update userDataRef with the user information, including pictureId
-      userDataRef.current = {
-        name,
-        number,
-        deliveryOption,
-        address: deliveryOption === "delivery" ? address : "",
-        paymentOption,
-        pictureId: pictureData._id,
-      };
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
-    } finally {
-      // Update teleg.MainButton properties outside the try-catch block
-      teleg.MainButton.text = "Submit";
-      teleg.MainButton.show();
     }
+
+    // Update userDataRef with the user information, including pictureId
+    userDataRef.current = {
+      name,
+      number,
+      deliveryOption,
+      address: deliveryOption === "delivery" ? address : "",
+      paymentOption,
+      pictureId,
+    };
+
+    // Update teleg.MainButton properties if needed
+    teleg.MainButton.text = "Submit";
+    teleg.MainButton.show();
   };
 
   useEffect(() => {
