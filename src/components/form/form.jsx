@@ -85,17 +85,16 @@ const PaymentForm = (props) => {
 
       const pictureIdFromServer = response.data.pictureId;
 
-      // Fetch the picture._id from the database using the pictureId
-      const picture = await Picture.findOne({ _id: pictureIdFromServer });
-
-      if (!picture) {
-        throw new Error("Picture not found in the database");
-      }
+      // Fetch the picture data from the server using a separate route
+      const pictureResponse = await axios.get(
+        `http://localhost:3000/pictures/${pictureIdFromServer}`
+      );
+      const pictureData = pictureResponse.data;
 
       // Set the picture._id in the state
       setPictureId((prevPictureId) => {
         console.log("Previous Picture ID:", prevPictureId);
-        return picture._id;
+        return pictureData._id; // Use the pictureData._id instead of directly accessing picture._id
       });
 
       // Update userDataRef with the user information, including pictureId
@@ -105,18 +104,17 @@ const PaymentForm = (props) => {
         deliveryOption,
         address: deliveryOption === "delivery" ? address : "",
         paymentOption,
-        pictureId: picture._id, // Use the picture._id instead of the response.data.pictureId
+        pictureId: pictureData._id, // Use the pictureData._id instead of directly accessing picture._id
       };
 
       // Update teleg.MainButton properties if needed
       teleg.MainButton.text = "Submit";
-      await teleg.MainButton.show();
+      teleg.MainButton.show();
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
   };
-
   useEffect(() => {
     const onSendData = () => {
       teleg.sendData(
