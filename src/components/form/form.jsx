@@ -23,7 +23,7 @@ const PaymentForm = (props) => {
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
   const { onCheckout, setUserData, userData, cartItems } = props;
-  const [pictureId, setPictureId] = useState("");
+  const [pictureId, setPictureId] = useState(null);
 
   const userDataRef = useRef({});
 
