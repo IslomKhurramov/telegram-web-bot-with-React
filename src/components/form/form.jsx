@@ -1,3 +1,4 @@
+User;
 import React, { useState, useEffect, useCallback } from "react";
 import "./form.css";
 import { Button, Input } from "@mui/material";
@@ -66,6 +67,8 @@ const PaymentForm = (props) => {
       const pictureData = response.data.data; // base64-encoded picture data
       const contentType = response.data.contentType;
 
+      // Use the pictureData and contentType as needed (e.g., display in an image element)
+
       // Now, you can update the pictureId state with the fetched data
       setPictureId({
         data: pictureData,
@@ -77,25 +80,21 @@ const PaymentForm = (props) => {
     }
   };
 
-  // Inside your submit function
   const submit = async () => {
     console.log("FIEL", file);
+    let response; // Declare the response variable outside the try-catch block
     try {
       let formData = new FormData();
       const uploadedFile = file;
       formData.append("picture", uploadedFile);
 
       // Make a POST request to the backend endpoint for handling file upload
-      const response = await axios.post(
-        "http://localhost:3000/payment",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      response = await axios.post("http://localhost:3000/payment", formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (!response.data || !response.data.pictureId) {
         throw new Error("File upload failed or no pictureId received");
@@ -112,12 +111,25 @@ const PaymentForm = (props) => {
 
       // Log the updated pictureId
       console.log("FETCHED DATA:", response.data.pictureId);
-      // ... (rest of your code)
+      // Update userDataRef with the user information, including pictureId
+      userDataRef.current = {
+        name,
+        number,
+        deliveryOption,
+        address: deliveryOption === "delivery" ? address : "",
+        paymentOption,
+        pictureId: response.data.pictureId, // Update pictureId in userDataRef
+      };
+
+      // Update teleg.MainButton properties if needed
+      teleg.MainButton.text = "Submit";
+      teleg.MainButton.show();
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
   };
+
   useEffect(() => {
     // Update the displayed image when the pictureId changes
     if (pictureId) {
@@ -250,7 +262,15 @@ const PaymentForm = (props) => {
           )}
         </div>
       </Box>
-
+      {pictureId && pictureId.data && pictureId.contentType && (
+        <div>
+          <h2>Uploaded Picture</h2>
+          <img
+            src={`data:${pictureId.contentType};base64,${pictureId.data}`}
+            alt="Uploaded"
+          />
+        </div>
+      )}
       <Button
         type="checkout"
         onClick={submit}
@@ -264,17 +284,6 @@ const PaymentForm = (props) => {
         {" "}
         Save
       </Button>
-      <h2>Uploaded picture</h2>
-      {pictureId && pictureId.data && pictureId.contentType && (
-        <div>
-          <h2>Uploaded Picture</h2>
-          {/* Create a data URL for the image */}
-          <img
-            src={`data:${pictureId.contentType};base64,${pictureId.data}`}
-            alt="Uploaded"
-          />
-        </div>
-      )}
     </div>
   );
 };
