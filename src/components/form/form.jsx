@@ -11,9 +11,6 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import { useRef } from "react";
 import axios from "axios";
-import PictureApiService from "../../apiServices/pictureApiService";
-import assert from "assert";
-import { Definer } from "../../lib/Definer";
 
 const teleg = window.Telegram.WebApp;
 
@@ -66,13 +63,32 @@ const PaymentForm = (props) => {
 
   const submit = async () => {
     try {
-      const pictureService = new PictureApiService();
-      const result = await pictureService.uploadImageToServer(file);
+      let formData = new FormData();
+      const uploadedFile = file;
+      formData.append("picture", uploadedFile);
 
-      assert.ok(result, Definer.general_err1);
-    } catch (err) {
-      console.log("ERROR: Submit BUtton");
-      throw err;
+      // Make a POST request to the backend endpoint for handling file upload
+      const response = await axios.post(
+        "http://localhost:3000/payment",
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (!response.data || !response.data.pictureId) {
+        throw new Error("File upload failed or no pictureId received");
+      }
+      setPictureId((prevPictureId) => {
+        console.log("Previous Picture ID:", prevPictureId);
+        return response.data.pictureId;
+      });
+    } catch (error) {
+      console.error("Error during file upload:", error);
+      // Handle the error, show a message to the user, etc.
     }
 
     // Update userDataRef with the user information, including pictureId

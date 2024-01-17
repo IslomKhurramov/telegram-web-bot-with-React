@@ -8,24 +8,22 @@ class PictureApiService {
 
   public async uploadImageToServer(image: any) {
     try {
+      console.log("IMAGE", image);
       let formData = new FormData();
       formData.append("picture", image);
 
       // Make a POST request to the backend endpoint for handling file upload
-      const response = await axios.post(
-        "http://localhost:3000/payment",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const result = await axios(`http://localhost:3000/community/image`, {
+        method: "POST",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("Response data:", result); // Add this line for debugging
 
-      assert.ok(response, Definer.general_err1);
-      const picture: Picture = response.data;
-      localStorage.setItem("picture_data", JSON.stringify(picture));
+      assert.ok(result?.data, Definer.general_err1);
+      const picture: string = result.data.data;
       return picture;
     } catch (error) {
       console.error("Error during file upload:", error);
