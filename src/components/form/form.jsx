@@ -1,4 +1,3 @@
-User;
 import React, { useState, useEffect, useCallback } from "react";
 import "./form.css";
 import { Button, Input } from "@mui/material";
