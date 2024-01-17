@@ -4,14 +4,13 @@ import { Button, Input } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useHistory, useParams } from "react-router-dom";
+import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
-
 import Radio from "@mui/material/Radio";
 import { useRef } from "react";
 import axios from "axios";
-import { setPicture } from "./slice";
-import { retrievePicture } from "./selector";
 
 const teleg = window.Telegram.WebApp;
 
@@ -23,8 +22,9 @@ const PaymentForm = (props) => {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
-  const { setUserData, cartItems } = props;
+  const { onCheckout, setUserData, userData, cartItems } = props;
   const [pictureId, setPictureId] = useState("");
+
   const userDataRef = useRef({});
 
   const handlePaymentOption = (event) => {
@@ -56,84 +56,56 @@ const PaymentForm = (props) => {
   const backToMainHandler = () => {
     history.push(`/`);
   };
-  const fetchPictureData = async (pictureId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/picture/${pictureId}`
-      );
 
-      // Handle the response data
-      const pictureData = response.data.data; // base64-encoded picture data
-      const contentType = response.data.contentType;
-
-      // Use the pictureData and contentType as needed (e.g., display in an image element)
-
-      // Now, you can update the pictureId state with the fetched data
-      setPictureId({
-        data: pictureData,
-        contentType: contentType,
-      });
-    } catch (error) {
-      console.error("Error fetching picture data:", error);
-      // Handle the error (show a message to the user, etc.)
-    }
-  };
+  useEffect(() => {
+    console.log("Updated pictureId:", pictureId);
+  }, [pictureId]);
 
   const submit = async () => {
     console.log("FIEL", file);
-    let response; // Declare the response variable outside the try-catch block
     try {
       let formData = new FormData();
       const uploadedFile = file;
       formData.append("picture", uploadedFile);
 
       // Make a POST request to the backend endpoint for handling file upload
-      response = await axios.post("http://localhost:3000/payment", formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:3000/payment",
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (!response.data || !response.data.pictureId) {
         throw new Error("File upload failed or no pictureId received");
       }
-
-      // Log the received pictureId
-      console.log("Received pictureId:", response.data.pictureId);
-
-      // Update pictureId state with the received pictureId
-      setPictureId(response.data.pictureId);
-
-      // Now fetch picture data using the updated pictureId
-      await fetchPictureData(response.data.pictureId);
-
-      // Log the updated pictureId
-      console.log("FETCHED DATA:", response.data.pictureId);
-      // Update userDataRef with the user information, including pictureId
+      setPictureId((prevPictureId) => {
+        console.log("Previous Picture ID:", prevPictureId);
+        return response.data.pictureId;
+      });
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
+
+    // Update userDataRef with the user information, including pictureId
     userDataRef.current = {
       name,
       number,
       deliveryOption,
       address: deliveryOption === "delivery" ? address : "",
       paymentOption,
-      pictureId: response.data.pictureId, // Update pictureId in userDataRef
+      pictureId,
     };
+
     // Update teleg.MainButton properties if needed
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
   };
-
-  useEffect(() => {
-    // Update the displayed image when the pictureId changes
-    if (pictureId) {
-      fetchPictureData(pictureId);
-    }
-  }, [pictureId]);
 
   useEffect(() => {
     const onSendData = () => {
@@ -260,7 +232,6 @@ const PaymentForm = (props) => {
           )}
         </div>
       </Box>
-
       <Button
         type="checkout"
         onClick={submit}
@@ -274,15 +245,6 @@ const PaymentForm = (props) => {
         {" "}
         Save
       </Button>
-      {pictureId && pictureId.data && pictureId.contentType && (
-        <div>
-          <h2>Uploaded Picture</h2>
-          <img
-            src={`data:${pictureId.contentType};base64,${pictureId.data}`}
-            alt="Uploaded"
-          />
-        </div>
-      )}
     </div>
   );
 };
