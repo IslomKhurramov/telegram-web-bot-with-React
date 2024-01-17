@@ -3,7 +3,7 @@ export interface AppRootState {
 }
 
 export interface PictureState {
-  picture: Picture;
+  picture: Picture[];
 }
 export interface Picture {
   _id: string;

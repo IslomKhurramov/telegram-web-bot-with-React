@@ -1,10 +1,9 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-
-// import reduxLogger from "redux-logger";
+import PicturePageReducer from "./components/form/slice";
 
 export const store = configureStore({
   reducer: {
-    // picture: PictureReducer,
+    picture: PicturePageReducer,
   },
 });
 
