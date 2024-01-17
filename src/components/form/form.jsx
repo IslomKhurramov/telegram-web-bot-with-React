@@ -62,6 +62,7 @@ const PaymentForm = (props) => {
   }, [pictureId]);
 
   const submit = async () => {
+    console.log("FIEL", file);
     try {
       let formData = new FormData();
       const uploadedFile = file;
