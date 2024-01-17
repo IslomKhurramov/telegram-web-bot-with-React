@@ -111,18 +111,18 @@ const PaymentForm = (props) => {
       // Log the updated pictureId
       console.log("FETCHED DATA:", response.data.pictureId);
       // Update userDataRef with the user information, including pictureId
-      userDataRef.current = {
-        name,
-        number,
-        deliveryOption,
-        address: deliveryOption === "delivery" ? address : "",
-        paymentOption,
-        pictureId: response.data.pictureId, // Update pictureId in userDataRef
-      };
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
+    userDataRef.current = {
+      name,
+      number,
+      deliveryOption,
+      address: deliveryOption === "delivery" ? address : "",
+      paymentOption,
+      pictureId: response.data.pictureId, // Update pictureId in userDataRef
+    };
     // Update teleg.MainButton properties if needed
     teleg.MainButton.text = "Submit";
     teleg.MainButton.show();
