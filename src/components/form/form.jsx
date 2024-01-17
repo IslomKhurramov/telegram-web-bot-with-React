@@ -119,14 +119,13 @@ const PaymentForm = (props) => {
         paymentOption,
         pictureId: response.data.pictureId, // Update pictureId in userDataRef
       };
-
-      // Update teleg.MainButton properties if needed
-      teleg.MainButton.text = "Submit";
-      teleg.MainButton.show();
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
     }
+    // Update teleg.MainButton properties if needed
+    teleg.MainButton.text = "Submit";
+    teleg.MainButton.show();
   };
 
   useEffect(() => {
@@ -261,15 +260,7 @@ const PaymentForm = (props) => {
           )}
         </div>
       </Box>
-      {pictureId && pictureId.data && pictureId.contentType && (
-        <div>
-          <h2>Uploaded Picture</h2>
-          <img
-            src={`data:${pictureId.contentType};base64,${pictureId.data}`}
-            alt="Uploaded"
-          />
-        </div>
-      )}
+
       <Button
         type="checkout"
         onClick={submit}
@@ -283,6 +274,15 @@ const PaymentForm = (props) => {
         {" "}
         Save
       </Button>
+      {pictureId && pictureId.data && pictureId.contentType && (
+        <div>
+          <h2>Uploaded Picture</h2>
+          <img
+            src={`data:${pictureId.contentType};base64,${pictureId.data}`}
+            alt="Uploaded"
+          />
+        </div>
+      )}
     </div>
   );
 };
