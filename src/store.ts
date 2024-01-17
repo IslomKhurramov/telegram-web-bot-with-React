@@ -5,11 +5,9 @@ import {
   getDefaultMiddleware,
 } from "@reduxjs/toolkit";
 
-import reduxLogger from "redux-logger";
+// import reduxLogger from "redux-logger";
 
 export const store = configureStore({
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(reduxLogger),
   reducer: {
     // picture: PictureReducer,
   },
