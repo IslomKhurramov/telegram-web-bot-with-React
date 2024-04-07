@@ -39,7 +39,7 @@ const PaymentForm = (props) => {
     setUserData((prevUserData) => ({
       ...prevUserData,
       deliveryOption: selectedOption,
-      address: selectedOption === "delivery" ? address : "",
+      address: selectedOption === "delivery(доставка)" ? address : "",
     }));
   };
 
@@ -205,28 +205,29 @@ const PaymentForm = (props) => {
             value={paymentOption}
             onChange={handlePaymentOption}>
             <FormControlLabel
-              value="Cash"
+              value="Cash(Наличные)"
               control={<Radio sx={{ color: "white" }} />}
-              label="Cash"
+              label="Cash(Наличные)"
             />
             <FormControlLabel
-              value="transfer"
+              value="transfer(перевод)"
               control={<Radio sx={{ color: "white" }} />}
-              label="Transfer"
+              label="transfer(перевод)"
             />
           </RadioGroup>
 
-          {paymentOption === "transfer" && (
+          {paymentOption === "transfer(перевод)" && (
             <div>
-              <Input
-                type="file"
-                accept=".jpeg, .jpg, .png, image/jpeg, image/jpg, image/png"
-                onChange={handleImageChange}
+              <p
                 style={{
-                  color: "white",
-                  marginTop: "10px",
-                }}
-              />
+                  fontWeight: 500,
+                  fontFamily: "Arial",
+                  padding: "10px",
+                  fontSize: "14px",
+                }}>
+                Bank account: NH(Nonghyeop)
+              </p>
+              <p>321-0551-2555-64</p>
               {/* You can display additional UI or information related to file upload if needed */}
             </div>
           )}
