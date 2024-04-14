@@ -228,7 +228,6 @@ const PaymentForm = (props) => {
                 Bank account: NH(Nonghyeop)
               </p>
               <p>321-0551-2555-64</p>
-
               {/* You can display additional UI or information related to file upload if needed */}
             </div>
           )}
