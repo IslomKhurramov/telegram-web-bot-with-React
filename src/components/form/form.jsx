@@ -79,10 +79,14 @@ const PaymentForm = (props) => {
           },
         }
       );
+
       if (!response.data || !response.data.pictureId) {
         throw new Error("File upload failed or no pictureId received");
       }
-      setPictureId(response.data.pictureId);
+      setPictureId((prevPictureId) => {
+        console.log("Previous Picture ID:", prevPictureId);
+        return response.data.pictureId;
+      });
     } catch (error) {
       console.error("Error during file upload:", error);
       // Handle the error, show a message to the user, etc.
@@ -225,7 +229,6 @@ const PaymentForm = (props) => {
               </p>
               <p>321-0551-2555-64</p>
 
-              <input type="file" id="myFile" name="filename" />
               {/* You can display additional UI or information related to file upload if needed */}
             </div>
           )}
